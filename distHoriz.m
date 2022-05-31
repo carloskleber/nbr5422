@@ -1,4 +1,7 @@
 function [kg, pbv] = distHoriz(obstaculo)
+  %% Distancia horizontal de seguranca
+  % tipo - tipo do obstaculo
+  % Tabela 7
 switch obstaculo
   case {'edificacao'}
     kg = 1.28;

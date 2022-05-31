@@ -13,7 +13,7 @@ regiao = 'SE';
 obstaculo = 'vegetacaoPerm';
 hmax = 0;
 % Diametro do cabo em m
-d = 1e-2; 
+d = 1e-2;
 % Comprimento do vao em m
 L = 450;
 % Angulo de incidencia do vento em relacao ao cabo (Figura X)
