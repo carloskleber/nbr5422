@@ -8,6 +8,16 @@ for i=1:length(L)
 end
 
 plot(L,GL,'-',
-     'LineWidth',2);
+     'LineWidth', 2);
+
+set(gca,'FontSize', 16);
+
+set(gcf,'Position', [100 100 1000 500]);
+
+xlabel('Comprimento do vão (L, em metros)',
+       'FontSize', 24);
+ylabel('Fator Gl',
+       'FontSize', 24);
+
 grid on;
 grid minor;
