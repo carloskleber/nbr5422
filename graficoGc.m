@@ -12,17 +12,24 @@ end
 plot(h,GC,'-',...
      'LineWidth', 2);
 
-set(gca,'FontSize', 16);
+set(gca,'FontSize', 14);
 
-set(gcf,'Position', [100 100 1000 500]);
+%set(gcf,'Position', [100 100 1000 500]);
+
+W = 6; H = 4;
+set(gcf,'PaperUnits','inches')
+set(gcf,'PaperOrientation','portrait');
+set(gcf,'PaperSize',[H,W]);
+set(gcf,'PaperPosition',[0,0,W,H]);
 
 legend('A','B','C','D',...
-       'Location', 'northwest');
+       'Location', 'eastoutside');
 
-xlabel('Altura do condutor (H, em metros)',...
-       'FontSize', 24);
-ylabel('Fator Gc',...
-       'FontSize', 24);
+xlabel('Altura do condutor {\it\fontname{serif}h} (m)',...
+       'FontSize', 16);
+ylabel('Fator {\it\fontname{serif}G_C}',...
+       'FontSize', 16);
 
 grid on;
 grid minor;
+print(gcf, 'graficoGc.png');

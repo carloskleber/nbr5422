@@ -10,17 +10,20 @@ end
 plot(x,Cxt,'-',
      'LineWidth', 2);
 
-set(gca,'FontSize', 16);
+set(gca,'FontSize', 14);
 
-set(gcf,'Position', [100 100 1000 500]);
+%set(gcf,'Position', [100 100 1000 500]);
+W = 6; H = 4;
+set(gcf,'PaperUnits','inches')
+set(gcf,'PaperOrientation','portrait');
+set(gcf,'PaperSize',[H,W]);
+set(gcf,'PaperPosition',[0,0,W,H]);
 
-legend('Cxt2',
-       'Location', 'northeast');
-
-xlabel('Índice de área exposta (X)',
-       'FontSize', 24);
-ylabel('Fator Cxt2',
-       'FontSize', 24);
+xlabel('Índice de área exposta {\it\fontname{serif}X}',
+       'FontSize', 16);
+ylabel('{\it\fontname{serif}C_{xt2}}',
+       'FontSize', 16);
 
 grid on;
 grid minor;
+print(gcf, 'graficoCxt2.png');
