@@ -23,7 +23,7 @@ set(gcf,'PaperSize',[H,W]);
 set(gcf,'PaperPosition',[0,0,W,H]);
 
 legend('A','B','C','D',...
-       'Location', 'eastoutside');
+       'Location', 'northwest');
 
 xlabel('Altura do condutor {\it\fontname{serif}h} (m)',...
        'FontSize', 16);
