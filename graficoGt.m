@@ -1,4 +1,4 @@
-%Figura X?
+% 8.6.3. Fator combinado de vento para suportes e cadeias de isoladores - Gt
 clear all;
 
 h = 10:60;

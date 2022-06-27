@@ -1,4 +1,4 @@
-%Figura X?
+% 8.5.2.4. Fator combinado de vento para cabos - Gc
 
 h = 10:60;
 GC = zeros(4,length(h));
