@@ -1,36 +1,10 @@
 % NBR5422 Aplicacao da metodologia proposta na NBR 5422
 %
-% Formulas referenciadas conforme draft de 26/06/2022
+% Formulas referenciadas conforme draft de 27/06/2022
 %
 % Carlos Kleber C. Arruda, carloska@cepel.br
-function nbr5422
-
-%% Dados basicos
-rugTerreno = 'B';
-% Altitude em m
-alt = 100;
-regiao = 'SE';
-obstaculo = 'vegetacaoPerm';
-hmax = 0;
-% flechas (conforme secao 5)
-ftipn = 10;
-ftips = 12;
-flimn = 11;
-flims = 13;
-% altura media do cabo
-h = 25;
-% Diametro do cabo em m
-d = 1e-2;
-% Comprimento do vao em m
-L = 450;
-% Diametro do tronco cilindrico em m
-dtc = 0.3;
-% Comprimento do tronco cilindrico em m
-Ltc = 10;
-% Angulo de incidencia do vento em relacao ao cabo (Figura X)
-omega = 0.;
-% Vento de referencia, periodo de integracao 10 min, periodo de retorno XXX, altura 10 m
-VrB = 15;
+%
+% Uso: configura um caso em um script a parte (vide exemplos), chamando no final esta rotina
 
 % 4.10.3.7 - Fator de correcao de rugosidade
 Vr = fatCorrRug(rugTerreno) * VrB
@@ -78,7 +52,8 @@ Ac = q010 * Cxc * Gc * Gl * d * L * sin(omega)^2;
 % 8.8.3.1. Forca exercida pelo vento, suporte cilindrico
 Atc = q010 * cxtc(d, Vp) * Gt * dtc  * Ltc * (sin(theta)).^3;
 
+% Angulo de balanco - comparacao
+
+
 %% Faixa de passagem
 
-
-end
