@@ -1,12 +1,18 @@
 % Teste estudo 1
-clear all
 
 %% Dados basicos
+% Tensao nominal em kV
+Us = 345;
 rugTerreno = 'B';
 % Altitude em m
 alt = 100;
+% Densidade relativa do ar
+dra = 0.9;
+% Umidade absoluta g/m3
+h = 11;
 regiao = 'SE';
 obstaculo = 'vegetacaoPerm';
+obstaculoH = 'vegetacaoPerm';
 hmax = 0;
 % flechas (conforme secao 5)
 ftipn = 10;
@@ -27,5 +33,7 @@ Ltc = 10;
 omega = 0.;
 % Vento de referencia, periodo de integracao 10 min, periodo de retorno XXX, altura 10 m
 VrB = 15;
+% Razao entre sobretensoes de frente lenta: U+/(U+ + U-)
+alpha = 0.33;
 
 nbr5422
