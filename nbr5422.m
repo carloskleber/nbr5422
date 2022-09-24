@@ -1,6 +1,6 @@
 % NBR5422 Aplicacao da metodologia proposta na NBR 5422
 %
-% Formulas referenciadas conforme draft de 27/06/2022
+% Formulas referenciadas conforme draft de 05/08/2022
 %
 % Carlos Kleber C. Arruda, carloska@cepel.br
 %
@@ -87,7 +87,12 @@ fprintf('- Pressao dinamica (q0):         %d Pa\n', q010);
 Atc = q010 * cxtc(d, Vp) * Gt * dtc  * Ltc * (sin(theta)).^3;
 
 % Angulo de balanco
+ang = anguloNBR1985(v, q0, d, pcond, Vv, Vp);
 
+% projecao horizontal
 
 %% Faixa de passagem
+
+
+
 

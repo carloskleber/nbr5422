@@ -1,5 +1,5 @@
-function K3s = fatTormentas(regiao)
-    %% Fator de tormentas
+function K3s = fatK3s(regiao)
+    %% Fator de tormentas para ventos de 3 s
   % Tabela 4
   switch regiao
     case {'S'}
