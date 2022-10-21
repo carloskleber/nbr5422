@@ -3,6 +3,8 @@ function [t, delta] = densArIncendio(rho, h)
 % rho - pressão atmosférica local em mmhg (padronizar pra hPa)
 % h - altura do cabo relativa a vegetacao em m
 % Secao 18
+%
+% Formula depreciada - nao incluida na norma
 r0 = 760; % pressao referencia em mmhg
 t0 = 293; % temp referencia em K
 s = 0;
