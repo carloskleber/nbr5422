@@ -22,14 +22,11 @@ set(gcf,'PaperPosition',[0,0,W,H]);
 legend('A','B','C','D',...
        'Location', 'eastoutside');
 
-xlabel('Altura da cadeia {\it\fontname{serif}h} (m)',...
+xlabel('Altura do ponto considerado {\it\fontname{serif}h} (m)',...
        'FontSize', 16);
 ylabel('Fator {\it\fontname{serif}G_t}',...
        'FontSize', 16, 'interpreter', 'tex');
 
 grid on;
 grid minor;
-% Testes de formato
-%saveas(gcf, 'graficoGt.pdf');
-%print(gcf, 'graficoGt.svg');
-print(gcf, 'graficoGt.png');
+print(gcf, 'graficoGtCadeia.png');

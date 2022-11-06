@@ -1,4 +1,4 @@
-%Figura X?
+% 8.9.1 - angulo de balanco de cadeia de isoladores (Figura 22)
 
 v = 0:0.1:50;
 k = zeros(1,length(v));
@@ -22,7 +22,7 @@ set(gcf,'PaperPosition',[0,0,W,H]);
 
 xlabel('Velocidade do Vento de Projeto {\it\fontname{serif}V_P} (m/s)',...
        'FontSize', 16);
-ylabel('Fator de Efetividade {\it\fontname{serif}K_v}',...
+ylabel('Fator de Efetividade {\it\fontname{serif}K}',...
        'FontSize', 16);
 
 xlim([10 35]);

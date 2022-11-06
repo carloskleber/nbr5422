@@ -1,6 +1,7 @@
 function D = distVegetacao(Vef)
 %DISTVEGETACAO Distancia cabo vegetacao (baixo risco de incendio)
 % Vef - tensao de linha em kV
+% Modelo depreciado, nao considerado na revisao atual
 if (Vef < 87)
   D = 4;
 else

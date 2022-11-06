@@ -50,32 +50,6 @@ for i,Kcs in enumerate(K):
         for m,sigma in enumerate(DP):
             for n,sigma_S in enumerate(DP_S):
                 R[i,j,m,n] = RISCO(Kcs, Ngaps, sigma, sigma_S)
-    
-
-#Plot que esta sendo efetivamente salvo
-#eixo y de 1e-6 a 1e-1:
-#plots4, axes4 = plt.subplots(nrows=len(DP), ncols=len(DP_S), figsize=(20,15))
-#plots4.gca().set_prop_cycle(None)
-#for m in range(len(DP)):
-#    for n in range(len(DP_S)):
-#        axes4[m,n].set_xticks(np.arange(1.05,1.70,0.05))
-#axes4[0,0].set_xlim(1.06,1.30)
-#axes4[0,1].set_xlim(1.12,1.48)
-#axes4[0,2].set_xlim(1.14,1.58)
-#axes4[1,0].set_xlim(1.10,1.52)
-#axes4[1,1].set_xlim(1.12,1.58)
-#axes4[1,2].set_xlim(1.16,1.72)
-#for m in range(len(DP)):
-#    axes4[m,0].set_ylabel(r'Risco de Falha, $\sigma_{fl} = $'+str(100*DP[m])+'%')
-#    for n in range(len(DP_S)):
-#        axes4[m,n].yaxis.grid(True, which='major', linewidth=2)
-#        axes4[m,n].xaxis.grid(True, which='major', linestyle='-', linewidth=2)
-#        axes4[m,n].xaxis.grid(True, which='minor', linestyle='--')
-#        axes4[m,n].set_xticks(np.arange(axes4[m,n].get_xlim()[0],axes4[m,n].get_xlim()[1],0.01), minor=True)
-#        # axes4[m,n].set_xlim([K[0],K[-1]])
-#        axes4[m,n].set_ylim([0.000001,0.1])
-#        axes4[m,n].set_xlabel(r'$K_{CS}=U_{90}/V_2$, $\sigma_{Sfl} = $'+str(100*DP_S[n])+'%')
-        
 
 plt.figure()
 for j in range(len(N)):

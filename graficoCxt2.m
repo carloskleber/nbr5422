@@ -1,4 +1,4 @@
-%Figura X?
+% 8.8.2.5 - Coeficiente de arrasto para suporte trelicado por perfis circulares (Figura 20)
 
 x = 0:0.01:1;
 Cxt = zeros(1,length(x));
@@ -18,7 +18,7 @@ set(gcf,'PaperOrientation','portrait');
 set(gcf,'PaperSize',[H,W]);
 set(gcf,'PaperPosition',[0,0,W,H]);
 
-xlabel('Razão de área exposta {\it\fontname{serif}X}',...
+xlabel('Índice da área exposta {\it\fontname{serif}X}',...
        'FontSize', 16);
 ylabel('{\it\fontname{serif}C_{x}}',...
        'FontSize', 16);

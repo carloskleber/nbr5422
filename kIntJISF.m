@@ -1,5 +1,5 @@
 function k = kIntJISF(i, regiao)
-  %% fator de tormentas corrigido pelo tempo de integracao - rotina originl JISF
+  %% fator de tormentas corrigido pelo tempo de integracao - rotina original JISF
   % i - tempo de integracao da media em segundos
   switch regiao
     case {'S'}

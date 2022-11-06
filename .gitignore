@@ -1,3 +1,6 @@
 *.asv
+*.png
 Thumbs.db
 Thumbs.db:encryptable
+pdfGumbel.m
+octave-workspace
