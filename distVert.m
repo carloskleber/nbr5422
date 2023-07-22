@@ -7,55 +7,55 @@ function [kg, alt, pbv] = distVert(tipo, hmax)
     case {'pedestre'}
       kg = 1.47;
       alt = 3.90;
-      pbv = 4.50;
+      pbv = 4.10;
     case {'maqAgricola'}
       kg = 1.18;
       alt = 4.00;
-      pbv = 4.60;
+      pbv = 4.20;
     case {'rodovia'}
       kg = 1.18;
       alt = 5.40;
-      pbv = 6.00;
+      pbv = 5.60;
     case {'ferroviaNaoEletrificada'}
       kg = 1.18;
       alt = 6.40;
-      pbv = 7.00;
+      pbv = 6.60;
     case {'ferroviaEletrificada'}
       kg = 1.30;
       alt = 9.70;
-      pbv = 10.3;
+      pbv = 10.0;
     case {'suporteFerrovia'}
       kg = 1.18;
       alt = hmax;
-      pbv = 2.10;
+      pbv = 1.70;
     case {'aguasNavegaveis'}
       kg = 1.47;
       alt = hmax;
-      pbv = 4.20;
+      pbv = 4.00;
     case {'aguasNaoNavegaveis'}
       kg = 1.47;
       alt = 3.60;
-      pbv = 4.20;
+      pbv = 4.00;
     case {'linhaTransmissao'}
       kg = 1.45;
       alt = hmax;
-      pbv = 1.00;
+      pbv = 0.70;
     case {'linhaTelecom'}
       kg = 1.45;
       alt = hmax';
-      pbv = 1.00;
+      pbv = 0.70;
     case {'vegetacaoPerm'}
       kg = 1.18;
       alt = hmax;
-      pbv = 2.00;
+      pbv = 1.80;
     case {'cultAgricPerm'}
       kg = 1.18;
       alt = hmax;
-      pbv = 2.00;
+      pbv = 1.80;
     case {'instalacaoTransp'}
       kg = 1.18;
       alt = hmax;
-      pbv = 1.00;
+      pbv = 0.70;
     otherwise
       error("Tipo invalido");
   end

@@ -7,6 +7,7 @@
 % Uso: configura um caso em um script a parte (vide exemplos), chamando no final esta rotina
 
 % 4.8.5 - Fator de correcao atmosferico
+% Deve-se entrar a distancia no ar antes de calcular os gaps?
 kafl = fatorAtmFrenteLenta(dra, h, d);
 % 4.10.3.7 - Fator de correcao de rugosidade
 Vr = fatCorrRug(rugTerreno) * VrB;
@@ -22,10 +23,10 @@ Pstip = 0.90;
 Pslim = 0.60;
 % 7.2.5. Parcelas eletricas
 if ~exist('Kcstip')
-  Kcstip = 1.40;
+  Kcstip = 1.51;
 end
 if ~exist('Kcslim')
-  Kcslim = 1.32;
+  Kcslim = 1.40;
 end
 
 % Projeto de isolamento

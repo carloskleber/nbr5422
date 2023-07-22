@@ -4,6 +4,6 @@ function k = fatorEfetividadeVento(v)
   if v < 10
     k = 1.0;
   else
-    k = 3.7047 * exp(-0.162*v) + 0.3;
+    k = 3.68 * exp(-0.163*v) + 0.3;
   end
 end

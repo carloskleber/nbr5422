@@ -8,7 +8,7 @@ switch obstaculo
     pbv = 4.00;
   case {'rodovia', 'ferroviaNaoEletrificada', 'ferroviaEletrificada'}
     kg = 1.28;
-    pbv = 1.20;
+    pbv = 0.80;
   case {'vegetacaoPerm'}
     kg = 1.28;
     pbv = 2.00;

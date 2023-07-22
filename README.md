@@ -65,12 +65,10 @@ Basear na planilha Excel
 
 ### Depreciados
 
-* densArIncendio.m
 * distVegetacao.m
 * fatK3s.m
 * kIntJISF.m
 * kIntNovo.m
-* tensaoSupIncendio.m
 * fatorCorrTint.m
 
 ## Rotinas de teste
@@ -80,4 +78,3 @@ Basear na planilha Excel
 * testeDU50.m
 * testeFatorAtmFL.m
 * testeJulian.m
-
