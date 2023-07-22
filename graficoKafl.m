@@ -1,4 +1,6 @@
 % Comparação dos valores kafl (seção 4.8.4.1)
+% Utilizado para demonstrar a variação de kafl, visto que seu uso para calcular o espaçamento
+% também é um parâmetro de entrada.
 clear all;
 
 d = 1:0.2:10;
