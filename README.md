@@ -72,7 +72,7 @@ Basear na planilha Excel
 
 ### Auxiliares (modelos e métodos fora da norma)
 
-* TODO: modelo ampacidade Morgan.
+* ampacidadeCigre.m - modelo ampacidade Cigre (conforme REN ANEEL 905 2020).
 
 ### Depreciados
 
@@ -94,3 +94,9 @@ Basear na planilha Excel
 # Bibliotecas e bases de dados externas
 
 * INMET: https://portal.inmet.gov.br/dadoshistoricos
+
+# Roadmap
+
+* Comparar com outras normas e a versão 1985 da NBR 5422.
+* Testar novas propostas para as próximas revisões.
+* Eventualmente converter as rotinas para Python.
