@@ -4,6 +4,18 @@ Metodologia em discussão na revisão da norma NBR 5422 "Projeto de linhas aére
 
 Rotinas em Matlab/ Octave e Python das fórmulas, para conferência e demonstração dos conceitos apresentados.
 
+## Utilização
+
+Chamar a rotina principal especificando o caso de teste:
+
+        nbr5422 teste1
+
+Nos subdiretórios estão normas para comparação, que utilizam a mesma chamada:
+
+        nbr1985 teste1
+        iec teste1
+        ieee teste1
+
 ## Relação das rotinas com as seções propostas
 
 * nbr5422.m - Aplicação de todos os parâmetros de projeto. Utilizado na chamada dos testes principais (teste#.m)
