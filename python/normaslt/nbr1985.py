@@ -52,7 +52,7 @@ def distHorizFF(du: float) -> float:
   Seção 10.2.1 - tabela 4
 
   Válido entre fases de mesmo circuito ou circuitos diferentes, sendo
-  Du a diferença fasorial das tensões entre os dois circuitos.
+  Du = diferença fasorial das tensões entre os dois circuitos.
   """
   f = 60.
   d1 = 0.22 + 0.01 * du
@@ -67,7 +67,7 @@ def distHorizFFAlt(v:float, pu:float) -> float:
   a = 1.15
   b = 1.03
   k = 1.40
-  return (v * pu * a / (500 * k))^1.667 * b
+  return (v * pu * a / (500 * k))**1.667 * b
 
 def distVertFT(du:float, obs:types.obs) -> float:
   """
@@ -93,7 +93,7 @@ def distVertFT(du:float, obs:types.obs) -> float:
   
 def distVertFTAlt(du:float, vl:float, pu:float, obs:types.obs) -> float:
   """
-  Distância mínima do condutor ao solo ou obstáculos - método convencional
+  Distância mínima do condutor ao solo ou obstáculos - método alternativo
   Seção 10.3.2
 
   du = Valor numericamente igual a tensão máxima de operação em kV
@@ -118,4 +118,4 @@ def distVertFTAlt(du:float, vl:float, pu:float, obs:types.obs) -> float:
       k = 1.
   a2 = 1.15
   b = 1.03  
-  return a1 + ((sqrt(2*du/3) * pu * vl) * a2 / (500. * k))^1.667 * b * c
+  return a1 + ((sqrt(2*du/3) * pu * vl) * a2 / (500. * k))**1.667 * b * c

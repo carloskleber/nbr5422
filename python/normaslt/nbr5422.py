@@ -29,7 +29,7 @@ def dra(p:float, t:float) -> float:
   p0 = 1013
   return p/p0 * (273+t0)/(273+t)
 
-def espacFFFrenteLenta(Us:float, Kcs:float, Fsfl:float, kafl:float, kg:float, zfl=0.06, alpha=0.33) -> float:
+def espacFFFrenteLenta(Us:float, Kcs:float, Fsfl:float, kg:float, kafl:float, zfl=0.06, alpha=0.33) -> float:
   """
   Espaçamento fase-fase para sobretensões de frente lenta
   Seção 9.4.2.4
@@ -37,18 +37,41 @@ def espacFFFrenteLenta(Us:float, Kcs:float, Fsfl:float, kafl:float, kg:float, zf
   caso a distância fique acima a 4 m, recalcula-se pela fórmula do EPRI
   (AC Transmission Line Reference Book 200 kV and Above, 3rd ed., 2005).
   Caso d > 10 m, um warning é lançado.
+  Us = Tensão entre fases eficaz da linha em kV
+  Kcs = Fator de coordenação estatístico (Anexo C)
+  Fsfl = Fator de sobretensão de frente lenta
+  kafl = Fator de correção atmosférico
+  kg = Fator de gap fase-terra, Anexo C
+  zfl = Variação de distribuição de probabilidade
+  alpha = Relação entre sobretensões de polaridade positiva e negativa: alpha = un/ (up + un)
   """
   kzfl = 1 - 1.3*zfl
-  d = 2.17 * exp(Kcs * sqrt(2) * Us * Fsfl / (1080 * sqrt(3) * kafl * kzfl * kg) - 1)
+  d = 2.17 * exp(Kcs * sqrt(2) * Us * Fsfl / (1080 * kafl * kzfl * kg) - 1)
   if (d > 4):
     u50 = 1.4 * Kcs * sqrt(2) * Us * Fsfl / (kafl * kzfl)
-    d = 4 + 0.3193 * (-sqrt(532.78 *(alpha-0.33)^2 + 2485.8 * (alpha-0.33)
-      - u50 + 3552.1) + 22.189 * (alpha-0.33) + 42.941)
+    r = 54.3115*alpha**2 + 212.6589*alpha - 0.1019*u50 + 286.0043
+    if (r < 0):
+      # raise('Erro de limite de validade do modelo (raiz de número negativo).')    
+      return float("NaN")
+    d = 15.3726 + 7.0846 * alpha - sqrt(r)
   if (d > 10):
     warn('Distância calculada fora da validade do modelo: %d m.' % d)
   return d
 
-def espacFTFrenteLenta(Us:float, Kcs:float, Fsfl:float, kafl:float, zfl:float, kg:float) -> float:
+def espacFFFreqFund(Us:float, Ftmo:float, kaff:float, kgff:float, zff=0.03) -> float:
+  """
+  Espacamento fase-fase em frequencia fundamental
+  Seção 9.3.2.1
+  Us = Tensão entre fases norminal eficaz em kV
+  Ftmo = Fator da tensão máxima de operação em pu
+  kaff = 
+  kgff = 
+  zff = (default 0.03)
+  """
+  kzff = 1. - 3. * zff
+  return 1.64 * (exp(Us* Ftmo / (750 * kaff * kzff * kgff)) - 1) ** 0.833
+
+def espacFTFrenteLenta(Us:float, Kcs:float, Fsfl:float, kafl:float, kg:float, zfl=0.06) -> float:
   """
   Espaçamento fase-terra para sobretensões de frente lenta
   Seção 9.4.1.1
@@ -56,17 +79,17 @@ def espacFTFrenteLenta(Us:float, Kcs:float, Fsfl:float, kafl:float, zfl:float, k
   kzfl = 0.922 * (1-1.3 * zfl)
   return 2.17 * exp(Kcs*sqrt(2)*Us*Fsfl / (1080 * sqrt(3) * kafl * kzfl * kg) - 1)
 
-def espacFTFreqFund(Us:float, Ftmo:float, kaff:float, kzff:float, kgff:float) -> float:
+def espacFTFreqFund(Us:float, Ftmo:float, kaff:float, kgff:float, zff=0.03) -> float:
   """
   Espaçamento fase-terra para frequência fundamental
   Seção 9.3.1.1
   """
-  return 1.64 * (exp(Us * Ftmo / (750 * sqrt(3) * kaff * kzff * kgff) - 1))^0.833
+  kzff = 1. - 3. * zff
+  return 1.64 * (exp(Us * Ftmo / (750 * sqrt(3) * kaff * kzff * kgff)) - 1)**0.833
 
 def fatorAtmFrenteLenta(dra:float, h:float, d:float) -> float:
   """
-  FATORATMFRENTELENTA Fator de correcao atmosferico para impulsos de frente
-  lenta linhas CA
+  Fator de correção atmosférico para impulsos de frente lenta, linhas CA
   dra - densidade relativa do ar
   h - umidade absoluta do ar em g/m3
   d - espaçamento no ar em m
@@ -77,7 +100,7 @@ def fatorAtmFrenteLenta(dra:float, h:float, d:float) -> float:
   else:
     g0 = 3400. / (500. * d + 4000.)
   m2 = 1.25 * g0 * (g0 - 0.2)
-  return pow(dra, m2) * pow(hc, m2)
+  return dra**m2 * hc**m2
 
 def fatCorrAlt(rug: types.rug, alt: float) -> float:
   """
@@ -95,7 +118,7 @@ def fatCorrAlt(rug: types.rug, alt: float) -> float:
       alfa = 0.280
     case _:
       warn("Classe de rugosidade inválida.")
-  return (alt/10)^alfa
+  return (alt/10)**alfa
 
 def fatorKgFFFrenteLenta(gap: types.gap, alpha=0.33) -> float:
   """
@@ -156,6 +179,18 @@ def fatorKgFTFrenteLenta(gap: types.gap) -> float:
     case _:
       raise ValueError('Tipo invalido')
   end 
+
+def fatorVentoVao(L: float) -> float:
+  """
+  Fator de efetividade para correção do comprimento do vão
+  Seção 8.5.2.2, Figura 17  
+  """
+  if L < 200:
+    return 1.0
+  elif L > 800:
+    return 0.858
+  else:
+    return 1.693e-10*L**3 - 1.093e-7*L**2 - 0.0002686*L + 1.057
 
 def massaAr(alt:float, t:float) -> float:
   """
