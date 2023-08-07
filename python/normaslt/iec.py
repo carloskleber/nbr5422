@@ -14,7 +14,7 @@ def fatorCorrAlt(h:float, m=1.) -> float:
   """
   return exp(m * h / 8150.)
 
-def espacPowerFreq(k:float, u50rp=-1., un=-1., ftmo=1., fca=1., sigma=0.) -> float:
+def espacPowerFreq(k:float, u50rp=-1., un=-1., ftmo=1., fca=1., sigma=0.03) -> float:
   """
   Cálculo da distância a partir da referência ponta-plano
   Eq. F-1: U50rp = 750 * sqrt(2) * log(1 + 0.55 * d**1.2)

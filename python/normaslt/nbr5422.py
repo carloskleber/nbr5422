@@ -87,6 +87,15 @@ def espacFTFreqFund(Us:float, Ftmo:float, kaff:float, kgff:float, zff=0.03) -> f
   kzff = 1. - 3. * zff
   return 1.64 * (exp(Us * Ftmo / (750 * sqrt(3) * kaff * kzff * kgff)) - 1)**0.833
 
+def espacFTFrenteRapida(ufr:float, kafr:float, kg: float, zfr=0.03) -> float:
+  """
+  Espaçamento fase-terra para sobretensões de frente rápida
+  Seção 9.5
+  """
+  kgfr = 0.74 + 0.26 * kg
+  kzfr = 1. - 1.3 * zfr
+  return ufr / (560. * kafr * kzfr * kgfr)
+
 def fatorAtmFrenteLenta(dra:float, h:float, d:float) -> float:
   """
   Fator de correção atmosférico para impulsos de frente lenta, linhas CA
