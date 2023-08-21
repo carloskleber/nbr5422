@@ -41,14 +41,14 @@ def espacFFFrenteLenta(Us:float, Kcs:float, Fsfl:float, kg:float, kafl:float, zf
   Kcs = Fator de coordenação estatístico (Anexo C)
   Fsfl = Fator de sobretensão de frente lenta
   kafl = Fator de correção atmosférico
-  kg = Fator de gap fase-terra, Anexo C
+  kg = Fator de gap entre fases, Anexo C
   zfl = Variação de distribuição de probabilidade
   alpha = Relação entre sobretensões de polaridade positiva e negativa: alpha = un/ (up + un)
   """
   kzfl = 1 - 1.3*zfl
-  d = 2.17 * exp(Kcs * sqrt(2) * Us * Fsfl / (1080 * kafl * kzfl * kg) - 1)
+  d = 2.17 * exp(Kcs * sqrt(2) * Us * Fsfl / (1080 * kafl * kzfl * kg* sqrt(3)) - 1)
   if (d > 4):
-    u50 = 1.4 * Kcs * sqrt(2) * Us * Fsfl / (kafl * kzfl)
+    u50 = 1.4 * Kcs * sqrt(2) * Us * Fsfl / (kafl * kzfl * sqrt(3))
     r = 54.3115*alpha**2 + 212.6589*alpha - 0.1019*u50 + 286.0043
     if (r < 0):
       # raise('Erro de limite de validade do modelo (raiz de número negativo).')    
@@ -58,18 +58,38 @@ def espacFFFrenteLenta(Us:float, Kcs:float, Fsfl:float, kg:float, kafl:float, zf
     warn('Distância calculada fora da validade do modelo: %d m.' % d)
   return d
 
-def espacFFFreqFund(Us:float, Ftmo:float, kaff:float, kgff:float, zff=0.03) -> float:
+def espacFFFreqFund(Us:float, Ftmo:float, kaff:float, kgff=-1., zff=0.03, kg=-1.) -> float:
   """
-  Espacamento fase-fase em frequencia fundamental
+  Espacamento fase-fase em frequência fundamental
   Seção 9.3.2.1
   Us = Tensão entre fases norminal eficaz em kV
   Ftmo = Fator da tensão máxima de operação em pu
   kaff = 
-  kgff = 
+  kgff = Fator de gap entre fases
   zff = (default 0.03)
   """
+  if kg != -1.:
+    kgff = 1.35*kg -0.35*kg**2
+
+  if kgff == -1.:
+    raise("Necessário definir kg ou kgff.")
+
   kzff = 1. - 3. * zff
   return 1.64 * (exp(Us* Ftmo / (750 * kaff * kzff * kgff)) - 1) ** 0.833
+
+def espacFFFrenteRapida(ufr:float, kafr:float, kg=-1., zfr=0.03, kgfr=-1.) -> float:
+  """
+  Espaçamento fase-fase para sobretensões de frente rápida
+  Seção 9.5.2
+  """
+  if kg != -1.:
+    kgfr = 0.74 + 0.26 * kg
+
+  if kgfr == -1.:
+    raise("Necessário definir kg ou kgfr.")
+  
+  kzfr = 1. - 1.3 * zfr
+  return 1.2 * ufr / (530. * kafr * kzfr * kgfr)
 
 def espacFTFrenteLenta(Us:float, Kcs:float, Fsfl:float, kafl:float, kg:float, zfl=0.06) -> float:
   """
@@ -79,22 +99,33 @@ def espacFTFrenteLenta(Us:float, Kcs:float, Fsfl:float, kafl:float, kg:float, zf
   kzfl = 0.922 * (1-1.3 * zfl)
   return 2.17 * exp(Kcs*sqrt(2)*Us*Fsfl / (1080 * sqrt(3) * kafl * kzfl * kg) - 1)
 
-def espacFTFreqFund(Us:float, Ftmo:float, kaff:float, kgff:float, zff=0.03) -> float:
+def espacFTFreqFund(Us:float, Ftmo:float, kaff:float, kgff=-1., zff=0.03, kg=-1.) -> float:
   """
   Espaçamento fase-terra para frequência fundamental
   Seção 9.3.1.1
   """
+  if kg != -1.:
+    kgff = 1.35*kg - 0.35*kg**2
+
+  if kgff == -1.:
+    raise("Necessário definir kg ou kgff.")
+  
   kzff = 1. - 3. * zff
   return 1.64 * (exp(Us * Ftmo / (750 * sqrt(3) * kaff * kzff * kgff)) - 1)**0.833
 
-def espacFTFrenteRapida(ufr:float, kafr:float, kg: float, zfr=0.03) -> float:
+def espacFTFrenteRapida(ufr:float, kafr:float, kg=-1., zfr=0.03, kgfr=-1.) -> float:
   """
   Espaçamento fase-terra para sobretensões de frente rápida
   Seção 9.5
   """
-  kgfr = 0.74 + 0.26 * kg
+  if kg != -1.:
+    kgfr = 0.74 + 0.26 * kg
+
+  if kgfr == -1.:
+    raise("Necessário definir kg ou kgfr.")
+  
   kzfr = 1. - 1.3 * zfr
-  return ufr / (560. * kafr * kzfr * kgfr)
+  return ufr / (530. * kafr * kzfr * kgfr)
 
 def fatorAtmFrenteLenta(dra:float, h:float, d:float) -> float:
   """
