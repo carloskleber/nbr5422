@@ -34,7 +34,7 @@ def RISCO (Kcs, Ngaps, sig, sig_S):
 #    plt.plot(u,sup)
     
     ris = sob*(1-(1-sup)**Ngaps)
-    return(sum(ris))
+    return(sum(ris) * du)
 
 
 
