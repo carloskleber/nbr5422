@@ -135,7 +135,7 @@ def fatorAtmFrenteLenta(dra:float, h:float, d:float) -> float:
   d - espaçamento no ar em m
   """
   hc = 1 + 0.012 * (h / dra - 11.)
-  if (d <= 3.5):
+  if d <= 3.5:
     g0 = 1080. / (500. * d) * log(0.46 * d + 1)
   else:
     g0 = 3400. / (500. * d + 4000.)
@@ -159,6 +159,16 @@ def fatCorrAlt(rug: types.rug, alt: float) -> float:
     case _:
       warn("Classe de rugosidade inválida.")
   return (alt/10)**alfa
+
+def fatorEfetividadeVento(v: float) -> float:
+  """
+  Fator de vento para correção do do ângulo de balanço com a velocidade do vento
+  Figura 22
+  """
+  if v < 10.:
+    return 1.0
+  else:
+    return 3.68 * exp(-0.163*v) + 0.3
 
 def fatorKgFFFrenteLenta(gap: types.gap, alpha=0.33) -> float:
   """
@@ -193,7 +203,6 @@ def fatorKgFFFrenteLenta(gap: types.gap, alpha=0.33) -> float:
         return 1.36
       case _:
         raise ValueError('Tipo invalido')
-    end
   else:
     raise ValueError('Fator alpha nao previsto')
 
@@ -218,7 +227,26 @@ def fatorKgFTFrenteLenta(gap: types.gap) -> float:
       return 1.35 # Entre 1.03 a 1.66
     case _:
       raise ValueError('Tipo invalido')
-  end 
+
+def fatorVentoCabo(rug: str, h: float) -> float:
+  """
+  Fator combinado de vento aplicado a cabos
+  Tabela 8
+  """
+  if h < 10:
+    h = 10.
+
+  match rug:
+    case 'A':
+      return 0.2914*log(h) + 1.0468
+    case 'B':
+      return 0.3733*log(h) + 0.9762
+    case 'C':
+      return 0.4936*log(h) + 0.9214
+    case 'D':
+      return 0.6153*log(h) + 0.8144
+    case _:
+      raise valueError('Classe de rugosidade invalida')
 
 def fatorVentoVao(L: float) -> float:
   """

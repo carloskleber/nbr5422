@@ -5,12 +5,13 @@ clear all;
 
 d = 1:0.2:10;
 t = 0:5:40;
-dra = 0.8:0.05:1;
+p = 995:5:1015;
 figure;
 for i=1:length(t)
-  for j=1:length(dra)
-    h = umidAbs(dra(j), t(i));
-    kafl = fatorAtmFrenteLenta(dra(j), h, d);
+  for j=1:length(p)
+    dr = dra(p(j), t(i));
+    h = umidAbs(dr, t(i));
+    kafl = fatorAtmFrenteLenta(dr, h, d);
     plot(d,kafl,'LineWidth', 2);
     hold on;
   end
