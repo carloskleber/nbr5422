@@ -1,12 +1,12 @@
 %% Teste de tratamento de dados do banco INMET
 close all
 
-t1 = dadosINMET('inmet/INMET_NE_PE_A301_RECIFE_01-01-2016_A_31-12-2016.CSV');
-t2 = dadosINMET('inmet/INMET_NE_PE_A301_RECIFE_01-01-2017_A_31-12-2017.CSV');
-t3 = dadosINMET('inmet/INMET_NE_PE_A301_RECIFE_01-01-2018_A_31-12-2018.CSV');
-t4 = dadosINMET('inmet/INMET_NE_PE_A301_RECIFE_01-01-2019_A_31-12-2019.CSV');
-t5 = dadosINMET('inmet/INMET_NE_PE_A301_RECIFE_01-01-2020_A_31-12-2020.CSV');
-t6 = dadosINMET('inmet/INMET_NE_PE_A301_RECIFE_01-01-2021_A_31-12-2021.CSV');
+t1 = dadosINMET('../inmet/INMET_NE_PE_A301_RECIFE_01-01-2016_A_31-12-2016.CSV');
+t2 = dadosINMET('../inmet/INMET_NE_PE_A301_RECIFE_01-01-2017_A_31-12-2017.CSV');
+t3 = dadosINMET('../inmet/INMET_NE_PE_A301_RECIFE_01-01-2018_A_31-12-2018.CSV');
+t4 = dadosINMET('../inmet/INMET_NE_PE_A301_RECIFE_01-01-2019_A_31-12-2019.CSV');
+t5 = dadosINMET('../inmet/INMET_NE_PE_A301_RECIFE_01-01-2020_A_31-12-2020.CSV');
+t6 = dadosINMET('../inmet/INMET_NE_PE_A301_RECIFE_01-01-2021_A_31-12-2021.CSV');
 
 vHor = [t1.vHor; t2.vHor; t3.vHor; t4.vHor; t5.vHor; t6.vHor];
 % identificadores de dia

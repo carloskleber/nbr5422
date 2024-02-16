@@ -3,13 +3,13 @@ function kint = fatorCorrTint10(rug)
 % Seção 4.9.4.3
   switch rug
     case {'A'}
-      Kint = 1.31;
+      kint = 1.31;
     case {'B'}
-      Krug = 1.41;
+      kint = 1.41;
     case {'C'}
-      Krug = 1.58;
+      kint = 1.58;
     case {'D'}
-      Krug = 1.88;
+      kint = 1.88;
     otherwise
       error("Classe de rugosidade invalida");
   end

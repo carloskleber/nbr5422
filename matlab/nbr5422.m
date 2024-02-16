@@ -11,12 +11,16 @@ run(arq);
 % 4.8.5 - Fator de correção atmosférico
 % Deve-se entrar a distancia no ar antes de calcular os gaps?
 kafl = fatorAtmFrenteLenta(dra, h, d);
-% 4.10.3.7 - Fator de correcao de rugosidade
+% 4.9.4.2 - Fator de correcao de rugosidade
 Vr = fatCorrRug(rugTerreno) * VrB;
-% 4.10.3.9 - Fator de turbulencia;
-Vp10 = Vr * fatTurb(regiao);
-% 8.2.3.4
-Vp3s = 1.15 * kint .* Vp10 * fatCorrTint10(regiao);
+% 4.9.4.3 - Fator de integracao
+kint = fatorCorrTint10(rugTerreno);
+% 8.2.1.1 - Fator de turbulencia;
+Vp = Vr * fatTurb(regiao);
+% 8.2.2.1 - Velocidade de 30 s de projeto
+
+% 8.2.3.4 - Velocidade de 3 s de projeto
+Vp3s = 1.15 * kint .* Vp;
 %% 7. Distâncias de segurança
 % TODO ver kg para torre
 [kg, al, Pbv] = distVert(obstaculo, hmax);
@@ -36,18 +40,18 @@ end
 zfl = 0.06;
 if ~exist('Fsfl')
   if Us <= 69
-    Fsfl = 3
+    Fsfl = 3;
   elseif Us <= 440
-    Fsfl = 2.5
+    Fsfl = 2.5;
   elseif Us <= 525
-    Fsfl = 2.3
+    Fsfl = 2.3;
   else
-    Fsfl = 2.2
+    Fsfl = 2.2;
   end
 end
 
 % Pode-se definir o fator Kg na torre ou usar o valor típico pelo tipo do gap
-if ~exist(kgtorre)
+if ~exist('kgtorre')
   kgtorre = fatorKgFTFrenteLenta(gap);
 end
 kgvao = fatorKgFFFrenteLenta('condutorParalelo', alpha);
@@ -65,11 +69,26 @@ Dvtipn = max(Dvtipn1, Dvtipn2);
 Dvtips = Pbv + Pslim + Petip;
 % 7.2.3.2 Dist vertical, temperatura limite sobrecorrente
 Dvlims = Pbv + Pelim;
-fprintf('Distancias verticais:\n');
+fprintf('Distancias verticais de seguranca:\n');
 fprintf('- Condicao tipica, regime nominal:       %.3f m\n', Dvtipn);
 fprintf('- Condicao tipica, regime sobrecorrente: %.3f m\n', Dvtips);
 fprintf('- Condicao limite, regime nominal:       %.3f m\n', Dvlimn);
 fprintf('- Condicao limite, regime sobrecorrente: %.3f m\n', Dvlims);
+
+fprintf('Flechas (modelo Cigre):\n');
+fprintf('- Regime nominal:       %.3f m\n', flechan);
+fprintf('- Regime sobrecorrente: %.3f m\n', flechas);
+
+htipn = Dvtipn + flechan;
+htips = Dvtips + flechas;
+hlimn = Dvlimn + flechan;
+hlims = Dvlims + flechas;
+
+fprintf('Altura do suporte por condicao:\n');
+fprintf('- Condicao tipica, regime nominal:       %.3f m\n', htipn);
+fprintf('- Condicao tipica, regime sobrecorrente: %.3f m\n', htips);
+fprintf('- Condicao limite, regime nominal:       %.3f m\n', hlimn);
+fprintf('- Condicao limite, regime sobrecorrente: %.3f m\n', hlims);
 
 % 7.3.2. distância horizontal
 Dh = Pbh + Petip;

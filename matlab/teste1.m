@@ -38,4 +38,11 @@ alpha = 0.33;
 % Tipo de gap na torre
 % TODO definir tipos de torre que intepretaria todos os gaps presentes.
 gap = 'condutorBraco';
+% Gap inicial
+d = 4;
 
+% Temperaturas obtidas a partir da distribuicao estatistica - vide
+% testeAmpEstat.m
+temp15 = 59.6511;
+temp5 = 67.0690;
+temp1 = 72.9359;

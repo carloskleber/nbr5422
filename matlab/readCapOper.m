@@ -27,7 +27,7 @@ opts = setvaropts(opts, ["TAmbienteC", "VelVentoms", "DirVento", "TempCondutorC"
 opts = setvaropts(opts, ["TAmbienteC", "VelVentoms", "DirVento", "TempCondutorC", "Corrente", "RadiacaoGlobal"], "ThousandsSeparator", ".");
 
 % Import the data
-veraoDia = readtable("veraoDia.csv", opts);
+veraoDia = readtable("../veraoDia.csv", opts);
 
 %% Convert to output type
 veraoDia = table2cell(veraoDia);

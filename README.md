@@ -14,6 +14,10 @@ Este repositório não substitui o texto original da norma, mas sim para elucida
 
 Existem duas implementações: a primeira versão em Matlab (compatível com Octave) e a segunda, mais recente, em Python. Consulte o README em cada pasta para instruções específicas.
 
+## Guia de aplicação
+
+O [Guia de aplicação](guiaAplicacao.md) é um texto comentando a norma NBR 5422, explicando a filosofia dos critérios e exemplificando.
+
 # Bibliotecas e bases de dados externas
 
 * INMET: https://portal.inmet.gov.br/dadoshistoricos
