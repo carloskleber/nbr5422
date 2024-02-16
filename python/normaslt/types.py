@@ -61,24 +61,23 @@ class tensao(Enum):
       Classes de tensão conforme NBR 6939
       Utilizando valores nominais usuais
       """
-      _15kV: (13.8, 15.)
-      _24_2kV: (23.1, 24.2)
-      _36_2kV: (34.5, 36.2)
-      _72_5kV: (69., 72.5)
-      _92_4kV: (88., 92.4)
-      _145kV: (138., 145.)
-      _242kV: (230., 242.)
-      _362kV: (345., 362.)
-      _460kV: (440., 460.)
-      _550kV: (500., 550.)
-      _800kV: (765., 800.)
+      _15kV = (13.8, 15.)
+      _24_2kV = (23.1, 24.2)
+      _36_2kV = (34.5, 36.2)
+      _72_5kV = (69., 72.5)
+      _92_4kV = (88., 92.4)
+      _145kV = (138., 145.)
+      _242kV = (230., 242.)
+      _362kV = (345., 362.)
+      _460kV = (440., 460.)
+      _550kV = (500., 550.)
+      _800kV = (765., 800.)
 
-      @classmethod
+      @staticmethod
       def nom(v) -> float:
             return v.value[0]
       
-      @classmethod
+      @staticmethod
       def max(v) -> float:
             return v.value[1]
 
-      

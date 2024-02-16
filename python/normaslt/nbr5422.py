@@ -6,7 +6,7 @@ from scipy.stats import norm
 from warnings import warn
 from normaslt import types
 """
-Biblioteca de funções da NBR 5422 - revisão 2023
+Biblioteca de funções da NBR 5422:2024
 """
 
 def anguloBalanco(v:float, q0:float, d:float, pcond: float, Vv:float, Vp:float) -> float:
@@ -142,6 +142,23 @@ def fatorAtmFrenteLenta(dra:float, h:float, d:float) -> float:
   m2 = 1.25 * g0 * (g0 - 0.2)
   return dra**m2 * hc**m2
 
+def fatCorrRug(rug: types.rug) -> float:
+  """
+  Fator de correção da rugosidade do terreno
+  Seção 4.9.4.2. - Tabela 1
+  """
+  match rug:
+    case types.rug.A:
+      return 1.08
+    case types.rug.B:
+      return 1.
+    case types.rug.C:
+      return 0.85
+    case types.rug.D:
+      return 0.67
+    case _:
+      warn("Classe de rugosidade inválida.")
+
 def fatCorrAlt(rug: types.rug, alt: float) -> float:
   """
   Fator de correção da altura
@@ -227,6 +244,21 @@ def fatorKgFTFrenteLenta(gap: types.gap) -> float:
       return 1.35 # Entre 1.03 a 1.66
     case _:
       raise ValueError('Tipo invalido')
+
+def fatTurb(regiao: types.regiao) -> float:
+  """
+  Fator de turbulencia
+  Tabela 3
+  """
+  match regiao:
+    case types.regiao.S:
+      return 1.08
+    case types.regiao.SE | types.regiao.CO:
+      return 1.12
+    case types.regiao.N | types.regiao.NE:
+      return 1.16
+    case _:
+      raise ValueError('Regiao invalida')
 
 def fatorVentoCabo(rug: str, h: float) -> float:
   """
