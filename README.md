@@ -16,7 +16,7 @@ Existem duas implementações: a primeira versão em Matlab (compatível com Oct
 
 ## Guia de aplicação
 
-O [Guia de aplicação](guiaAplicacao.md) é um texto comentando a norma NBR 5422, explicando a filosofia dos critérios e exemplificando.
+O [Guia de aplicação](guiaAplicacao.md) é um texto comentando a norma NBR 5422, explicando a filosofia dos critérios e exemplificando para algumas situações de projeto.
 
 # Bibliotecas e bases de dados externas
 
@@ -27,3 +27,4 @@ O [Guia de aplicação](guiaAplicacao.md) é um texto comentando a norma NBR 542
 * Comparar com outras normas e a versão 1985 da NBR 5422.
 * Testar novas propostas para as próximas revisões.
 * Eventualmente converter as rotinas para Python.
+* Implementar exemplos para uma faixa significativas de linhas.
