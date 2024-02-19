@@ -6,6 +6,12 @@ A norma NBR 5422 apresenta uma série de critérios para assegurar a qualidade d
 
 Este texto, inspirado em publicações semelhantes, procura esclarecer a aplicação da norma.
 
+> [!TIP]
+> O texto nestas caixas são dicas sobre a seção
+
+> [!IMPORTANT]
+> O texto nestes caixas são informações importantes para a aplicação da seção
+
 ## Histórico
 
 O desenvolvimento da versão atual da NBR 5422 foi abordado ao longo dos anos em diversos artigos de congresso:
@@ -91,11 +97,35 @@ Ampacidade estatística
 
 Cálculo das temperaturas no condutor para cada risco térmico, associada a uma distribuição estatística.
 
+Regime de corrente são divididos em nominal e sobrecorrente: um situação temporária, não habitual e não repetitiva, decorrente a uma contingência. Recomenda-se que este regime não ultrapasse 4 dias initerruptos, ou no total 5% do tempo de operação da linha.
+
+A parte do regime de corrente, define-se o risco térmico, no qual a corrente do condutor é excedida devido a corrente e fatores externos, e o risco de falha de uma descarga em qualquer um dos espeçamentos presentes na linha.
+
 As figuras do Anexo B foram geradas a partir de um exemplo processado pelo Claudionor. A ideia é ter no futuro uma rotina interna calculando a temperatura, para uma dada locação (vinculada a uma base de dados INMET).
 
 A partir do risco térmico, extrai-se as temperaturas para 15%, 5% e 1%, para serem associadas as distâncias de segurança.
 
 As correntes podem ser estabelecidas para cada período climático - mas isso já seria implícito no cálculo geral? No final haverá uma temperatura/ distância determinante do projeto.
+
+### Projeto de isolamento (seção 9 e Anexo C)
+
+#### Desenvolvimento
+
+Histórico da formulação
+
+#### Aplicação
+
+A seção 9 provê as parcelas elétricas, a serem aplicadas nas distâncias de segurança (seçao 7) - motivo no qual se deve consultar a seção 9.
+
+|Regime | Condição | Risco térmico | Risco de falha | Símbolo | Fórmula | $K_{cs}$ típico |
+|--|--|--|--|--|--|--|
+|Nominal | Típica | 15% | $10^{-6}$ | $D_{Vtip,n}$ | $P_{bV} + 0,90 + P_{etip,n}$ | 1,35 |
+|  | Limite | 1% | $10^{-4}$ | $D_{Vlim,n}$ | $P_{bV} + 0,60 + P_{elim}$ | 1,25 |
+|Sobrecorrente | Típica | 5% | $10^{-4}$ | $D_{Vtip,s}$ | $P_{bV} + 0,60 + P_{etip,s}$ | 1.35 |
+|  | Limite | 1% | $10^{-4}$ | $D_{Vlim,s}$ | $P_{bV} + P_{elim}$ | 1,25 |
+
+
+Distâncias minímas fase-terra e entre fases.
 
 ### Distâncias verticais de segurança (seção 7)
 
@@ -121,9 +151,9 @@ Modelos de ângulo de balanço foram comparados com o modelo da NBR 5422:1985.
 1. MORS, H. Wind Pressure on Overhead Transmission Line Conductors – Hornisgrinde Testing Station. CIGRE Report 220, 1956.
 2. CIGRE WG 22.06. Probabilistic Design of Overhead Transmission Lines, Technical Brochure 178, February 2001.
 
-![Fator de efetividade do vento](figuras/balanco1.png)
+![Fator de efetividade do vento](figuras/balanco1.png "Fator de efetividade do vento")
 
-![Comparação de ângulos de balanço](figuras/balanco2.png)
+![Comparação de ângulos de balanço](figuras/balanco2.png "Comparação de ângulos de balanço")
 
 Por falta de consenso, manteve-se o modelo de 1985, ficando evidente a necessidade de desenvolvimentos conclusivos para uma amostragem representativa de cabos e vãos.
 
@@ -159,19 +189,91 @@ A NBR 5422:1985 determina como condição uma das linhas em balanço e a outra e
 
 Na NBR 5422:2024...
 
-### Projeto de isolamento (seção 9 e Anexo C)
-
-#### Desenvolvimento
-
-Histórico da formulação
-
-#### Aplicação
-
-Distâncias minímas fase-terra e entre fases.
-
 ### Projeto mecânico de cabos, suportes e fundações (seções 11, 12 e 13)
 
 Critérios e hipóteses de carregamento.
+
+#### Hipóteses mínimas para cabos
+
+|Hipótese|Condição|Vento|Temperatura ar|Carga ruptura|
+|--|--|--|--|--|
+|Temperatura minima|Inicial|Sem vento|Mínima|40%|
+|Temperatura média das mínimas diárias do mês mais frio|Inicial|Sem vento|Média|Critério $H/p$|
+|Vento de projeto de 10 min|Inicial|Sem vento|Média das mínimas diárias|70%|
+|Vento de proneto de 3 s|Inicial|Sem vento|Média das mínimas diárias|70%|
+|Temperatura típica do condutor|Final|Sem vento|$t_{tip}$|
+|Temperatura limite do condutor|FInal|Sem vento|$t_{lim}$|
+|Balanço do condutor|Final|||
+
+Critério $H/p$ (ou originalmente $H/w$)
+
+#### Hipóteses mínimas para suportes
+
+<table>
+<thead>
+  <tr>
+    <th rowspan="3" colspan="2">Hipótese</th>
+    <th colspan="5">Coeficientes para estado limite de falha</th>
+    <th rowspan="3">Descrição</th>
+  </tr>
+  <tr>
+    <th rowspan="2">Permanente</th>
+    <th rowspan="2">Vento</th>
+    <th colspan="3">Tração nos cabos</th>
+  </tr>
+  <tr>
+    <th>Vertical</th>
+    <th>Transversal</th>
+    <th>Longitudinal</th>
+  </tr>
+</thead>
+<tbody>
+  <tr>
+    <td>Vento de projeto de 10 min</td><td>Transversal, componente vertical máxima tração nos cabos</td><td>1,15</td><td>1,0</td><td>1,15</td><td>1,0</td><td>1,0</td><td></td>
+  </tr>
+  <tr>
+    <td></td><td>Transversal, carga vertical reduzida</td><td>1,15</td><td>1,0</td><td>0,87</td><td>1,0</td><td>1,0</td><td></td>
+  </tr>
+  <tr>
+    <td></td><td>Oblíquo, carga vertical máxima</td><td>1,15</td><td>1,0</td><td>1,15</td><td>1,0</td><td>1,0</td><td>Considerar ângulos de incidência de 15°, 30° e 45°.</td>
+  </tr>
+  <tr>
+    <td>Vento de projeto de 3 s</td><td>Transversal</td><td>1,15</td><td>1,0</td><td>1,15</td><td>1,0</td><td>1,0</td><td></td>
+  </tr>
+  <tr>
+    <td></td><td>Oblíquo</td><td>1,15</td><td>1,0</td><td>1,15</td><td>1,0</td><td>1,0</td><td></td>
+  </tr>
+  <tr>
+    <td></td><td>Transversal, pernas inclinadas</td><td>1,15</td><td>1,0</td><td>1,15</td><td>1,0</td><td>1,0</td><td></td>
+  </tr>
+  <tr>
+    <td></td><td>Oblíquo, pernas inclinadas</td><td>1,15</td><td>1,0</td><td>1,15</td><td>1,0</td><td>1,0</td><td></td>
+  </tr>
+  <tr>
+    <td></td><td>Transversal, suportes suspensão</td><td>1,15</td><td>1,0</td><td>1,15</td><td>1,0</td><td>1,0</td><td></td>
+  </tr>
+  <tr>
+    <td></td><td>Longitudinal, suportes suspensão</td><td>1,15</td><td>1,0</td><td>1,15</td><td>1,0</td><td>1,0</td><td></td>
+  </tr>
+  <tr>
+    <td></td><td>Transversal, monomastro suspensão</td><td>1,15</td><td>1,0</td><td>1,15</td><td>1,0</td><td>1,0</td><td></td>
+  </tr>
+  <tr>
+    <td></td><td>Longitudinal, monomastro suspensão</td><td>1,15</td><td>1,0</td><td>1,15</td><td>1,0</td><td>1,0</td><td></td>
+  </tr>
+  <tr>
+    <td>Contenção de falha</td><td>Desequilíbrio longitudinal para-raios</td><td>1,15</td><td>0,0</td><td>1,15</td><td>1,0</td><td>1,0</td><td></td>
+  </tr>
+  <tr>
+    <td></td><td>Desequilíbrio longitudinal condutor</td><td>1,15</td><td>0,0</td><td>1,15</td><td>1,0</td><td>1,0</td><td></td>
+  </tr>
+  <tr>
+    <td colspan="2">Construção e manutenção</td><td>1,5</td><td>0,0</td><td>1,5</td><td>1,5</td><td>1,5</td><td></td>
+  </tr>
+</tbody>
+</table>
+
+Os coeficientes para estado limite de utilização são iguais a 1.
 
 ### Faixa de passagem (seções 10, 17 e 18)
 
@@ -179,15 +281,27 @@ Cálculo da largura de faixa por critérios elétricos (seção 10) e mecânicos
 
 Os critérios elétricos podem ser divididos em fenômenos lineares (campo elétrico e magnético) e os relativos ao efeito corona (ruído audível e radiointerferência). O cálculo dos campos elétrico e magnético podem ser obtidos pelas equações do eletromagnetismo, considerando respectivamente os potenciais e correntes na linhas nas condições operativas máximas, além da sua posição geométrica mais provável (notadmente, as flechas).
 
+A NBR 5422 não define limites, e a rigor estas já eram estabelecidos por leis e resoluções de agências, ficando ao texto da norma esclarecimentos quanto a sua aplicação.
+
 Os fenômenos oriundos do efeito corona podem ser obtidos por modelos empíricos. O modelo seminal foi desenvolvido por Peek, no qual determina o campo elétrico crítico em um cilindro, em kV/cm:
 
 $$E_c = 30 \delta m \left( 1 + \frac{0,3}{\sqrt{\delta r}} \right)$$
 
+### Aterramento (seção 15)
+
+Aplicação da norma NBR 17140.
+
 ### Projeto executivo
 
-* Projeto de travessias (seção 20)
-* Aplicação de vento de projeto (seção 4) no cálculo detalhado.
-* Manutenção de faixa de passagem (seção 19)
+Algumas seções da norma somente serão aplicadas na etapa do projeto executivo, tais como:
+
+### Projeto de travessias (seção 20)
+
+Distância de segurança entre linhas
+
+### Aplicação de vento de projeto (seção 4) no cálculo detalhado.
+
+### Manutenção de faixa de passagem (seção 19)
 
 ## Referências
 
