@@ -116,6 +116,17 @@ Semelhanças com IEC 60826 e particularidades na NBR
 
 Relação com a NBR 8850
 
+Modelos de ângulo de balanço foram comparados com o modelo da NBR 5422:1985.
+
+1. MORS, H. Wind Pressure on Overhead Transmission Line Conductors – Hornisgrinde Testing Station. CIGRE Report 220, 1956.
+2. CIGRE WG 22.06. Probabilistic Design of Overhead Transmission Lines, Technical Brochure 178, February 2001.
+
+![Fator de efetividade do vento](figuras/balanco1.png)
+
+![Comparação de ângulos de balanço](figuras/balanco2.png)
+
+Por falta de consenso, manteve-se o modelo de 1985, ficando evidente a necessidade de desenvolvimentos conclusivos para uma amostragem representativa de cabos e vãos.
+
 #### Aplicação
 
 Esforços nos elementos.
