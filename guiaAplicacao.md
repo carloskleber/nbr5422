@@ -4,10 +4,14 @@
 
 A norma NBR 5422 apresenta uma série de critérios para assegurar a qualidade de um projeto, porém não é um texto didático.
 
-Este texto, inspirado em publicações semelhantes, procura esclarecer a aplicação da norma.
+Este texto, inspirado em publicações semelhantes ([Fuchs, 1982](#Fuchs1982), [Labegalini, 1992](#Labegalini1992)), procura esclarecer a aplicação da norma.
+
+### Convenções
+
+Algumas convenções do GitHub são utilizadas:
 
 > [!TIP]
-> O texto nestas caixas são dicas sobre a seção
+> O texto nestas caixas são dicas práticas sobre a seção
 
 > [!IMPORTANT]
 > O texto nestes caixas são informações importantes para a aplicação da seção
@@ -34,6 +38,9 @@ O desenvolvimento da versão atual da NBR 5422 foi abordado ao longo dos anos em
 16. R. D. Machado et al, "A utilização da climatologia virtual na análise de carregamentos em linhas de transmissão: um estudo de caso comparando dados simulados contra medidos," XXII SNPTEE, GLT-06, Brasília, 2013.​
 17. A. O. Silva, "Uma análise do critério H/w," XXIII SNPTEE, GLT-18, Foz do Iguaçu, 2015.​
 18. A. Mpalantinos Neto et al, "A nova norma NBR 5422 – Projetos de linhas aéreas de transmissão de energia elétrica – principais avanços e mudanças," XXVI SNPTEE, GLT-27, Rio de Janeiro, 2022.
+
+> [!IMPORTANT]
+> A norma aplica-se a linhas aéreas CA a partir de 38 kV e CC. Alguns aspectos apresentados neste guia serão sobre linhas do Sistema Interligado Brasileiro (SIN), regidas sob o sistema de concessões do Goverrno Federal, logo com regras específicas tais como os leilões de transmissão e os procedimentos de rede do ONS. O guia na medida do possível terá uma aplicação ampla, podendo abordar as particularidades de projeto de linhas para o SIN.
 
 ## Dados básicos
 
@@ -305,6 +312,6 @@ Distância de segurança entre linhas
 
 ## Referências
 
-* Fuchs, R.D. Projetos mecânicos das linhas aéreas de transmissão. Editora Blucher, 1982.
-* Labegalini, P.R., Labegalini, J.A., Fuchs, R.D. e Almeida, M.T. Projetos mecânicos das linhas aéreas de transmissão. 2ª edição, Editora Blucher, 1992.
-* Power Line Systems. Proposed workflow for PLS-CADD, https://www.powline.com/technotes/PLS-CADD_Workflow.pdf
+1. <a name="Fuchs1982"></a> Fuchs, R.D. Projetos mecânicos das linhas aéreas de transmissão. Editora Blucher, 1982.
+1. <a name="Labegalini1992"></a> Labegalini, P.R., Labegalini, J.A., Fuchs, R.D. e Almeida, M.T. Projetos mecânicos das linhas aéreas de transmissão. 2ª edição, Editora Blucher, 1992.
+1. <a name="PLSCADD"></a> Power Line Systems. Proposed workflow for PLS-CADD, https://www.powline.com/technotes/PLS-CADD_Workflow.pdf
