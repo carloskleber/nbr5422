@@ -1,5 +1,7 @@
 # NBR 5422:2024 - Guia de Aplicação
 
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.10696412.svg)](https://doi.org/10.5281/zenodo.10696412)
+
 ## Introdução
 
 A norma NBR 5422 apresenta uma série de critérios para assegurar a qualidade de um projeto, porém não é um texto didático.
@@ -33,11 +35,21 @@ O desenvolvimento da versão atual da NBR 5422 foi abordado ao longo dos anos em
 11. A. Consentino, C. Kosmann, S. Colle e R. N. Fontoura Filho, "Carregamentos de LTs na região serrana de Santa Catarina - Comparação de resultados obtidos com a NBR 5422 atual e proposta," XII ERIAC, Foz do Iguaçu, 2007.​
 12. J. I. Silva Filho  e A. A. Menezes Jr., "Determinação da velocidade de vento de projeto por meio de métodos alternativos aos vigentes e uso de técnicas mais adequadas a redes anemométricas com coletas escassas," XXIX SNPTEE, GLT-12, Rio de Janeiro, 2007.​
 13. A. Consentino, C. Kosmann, S. Colle e R. Hass, "Analise estatística da ampacidade sazonal da LT 525 kV Areia – Campos Novos, utilizando-se técnicas de downscaling de dados meteorológicos, com apoio em mapeamento a laser," XIX SNPTEE, GLT-24, Rio de Janeiro, 2007.​
-14. C. Kosmann, A. Consentino e J. N. Hoffmann, "Analise de projetos de linhas de transmissão sob a ótica da ampacidade estatística proposta na revisão da norma NBR 5422," XIII ERIAC, Argentina, 2009.​
-15. A. Consentino et al, "Analise estatística das capacidades operativas sazonais de linhas de transmissão utilizando curvas de carga," XIV ERIAC, Paraguai, 2011.​
-16. R. D. Machado et al, "A utilização da climatologia virtual na análise de carregamentos em linhas de transmissão: um estudo de caso comparando dados simulados contra medidos," XXII SNPTEE, GLT-06, Brasília, 2013.​
-17. A. O. Silva, "Uma análise do critério H/w," XXIII SNPTEE, GLT-18, Foz do Iguaçu, 2015.​
-18. A. Mpalantinos Neto et al, "A nova norma NBR 5422 – Projetos de linhas aéreas de transmissão de energia elétrica – principais avanços e mudanças," XXVI SNPTEE, GLT-27, Rio de Janeiro, 2022.
+14. R. G. C. Furtado. Métodos estatísticos aplicados ao cálculo da ampacidade e risco térmico de linhas aéreas de transmissão. Dissertação de Mestrado, Universidade Federal de Juiz de Fora, 2008, [link](http://repositorio.ufjf.br/jspui/bitstream/ufjf/3001/1/ronangustavocarvalhofurtado.pdf)
+15. C. Kosmann, A. Consentino e J. N. Hoffmann, "Analise de projetos de linhas de transmissão sob a ótica da ampacidade estatística proposta na revisão da norma NBR 5422," XIII ERIAC, Argentina, 2009, [link](https://www.researchgate.net/publication/374287920_Analise_de_Projetos_de_Linhas_de_Transmissao_sob_a_Otica_da_Ampacidade_Estatistica_Proposta_na_Revisao_da_Norma_NBR_5422)
+16. A. Consentino et al, "Analise estatística das capacidades operativas sazonais de linhas de transmissão utilizando curvas de carga," XIV ERIAC, Paraguai, 2011.​
+17. R. D. Machado et al, "A utilização da climatologia virtual na análise de carregamentos em linhas de transmissão: um estudo de caso comparando dados simulados contra medidos," XXII SNPTEE, GLT-06, Brasília, 2013.​
+18. A. O. Silva, "Uma análise do critério H/w," XXIII SNPTEE, GLT-18, Foz do Iguaçu, 2015.​
+19. C. C. de Oliveira, H. Carvalho e V. R. V. Mendes. "Avaliação das forças devidas ao vento em cabos de linhas aéreas de transmissão," XVIII ERIAC, Foz do Iguaçu, 2019, [link](https://www.researchgate.net/publication/333293434_AVALIACAO_DAS_FORCAS_DEVIDAS_AO_VENTO_EM_CABOS_DE_LINHAS_AEREAS_DE_TRANSMISSAO_SEGUNDO_DIFERENTES_METODOLOGIAS)
+20. A. Mpalantinos Neto et al, "A nova norma NBR 5422 – Projetos de linhas aéreas de transmissão de energia elétrica – principais avanços e mudanças," XXVI SNPTEE, GLT-27, Rio de Janeiro, 2022, [link](https://www.researchgate.net/publication/360867174_A_nova_norma_NBR_5422_-_Projeto_de_linhas_aereas_de_transmissao_de_energia_eletrica_-_principais_avancos_e_mudancas)
+
+Alguns artigos podem ser obtidos nos acervos técnicos:
+
+* https://xxviisnptee.com.br/its/
+* https://web.archive.org/web/20181228173249/https://www.xxvsnptee.com.br/acervo-tecnico/
+
+> [!IMPORTANT]
+> Os artigos abordaram modelos em trabalho na época da sua publicação, que podem diferir do que foi efetivamente implementado no texto da norma, mas cabe como registro histórico.
 
 > [!IMPORTANT]
 > A norma aplica-se a linhas aéreas CA a partir de 38 kV e CC. Alguns aspectos apresentados neste guia serão sobre linhas do Sistema Interligado Brasileiro (SIN), regidas sob o sistema de concessões do Goverrno Federal, logo com regras específicas tais como os leilões de transmissão e os procedimentos de rede do ONS. O guia na medida do possível terá uma aplicação ampla, podendo abordar as particularidades de projeto de linhas para o SIN.
@@ -112,27 +124,31 @@ As figuras do Anexo B foram geradas a partir de um exemplo processado pelo Claud
 
 A partir do risco térmico, extrai-se as temperaturas para 15%, 5% e 1%, para serem associadas as distâncias de segurança.
 
+O cálculo das flechas em regime permanente pode ser obtido a partir do equilíbrio térmico, como no modelo do Cigre ([1992](Cigre1992)):
+
+$$P_j + P_M + P_S + P_i = P_c + P_r + P_w$$
+
+Cálculo da flecha inicial - Tração inicial do cabo (seção 11)
+
+O cálculo tradicional da flecha é obtido pela fórmula da catenária:
+
+$$f=\frac{T_0}{p}\left[ \cosh \left( \frac{A p}{2 T_0}\right) - 1\right]$$
+
+Ou pela sua aproximação da parábola:
+
+$$f=\frac{p A^2}{8 T_0}$$
+
+Sendo estas fórmulas válidas para vãos isolados e nivelados.
+
+A NBR 5422:1985 estipulava um critério de tração relativo ao percentual da EDS do cabo (entre 14 a 21%, de acordo com o tipo). Na versão de 2024 isto não é mais normatizado.
+
+O novo critério é baseado na brochura técnica 273 do Cigre ([2005](CigreTB273)), no qual condutores singelos sem qualquer dispositivo de proteção contra vibrações eólicas são limitados pela razão H/p. Para cabos com dispositivos, ou feixes de condutores, estudos específicos devem ser realizados, como discutido na brochura.
+
+A partir da temperatura obtida, soluciona-se a equação de mudança de estado de forma iterativa a fim de obter a tração final $T_{02}$:
+
+$$\Delta t = \frac{1}{\alpha_t} \left[ \left( \frac{C_2 \sinh \frac{A}{2 C_2}}{C_! \sinh \frac{A}{2 C_1}}-1 \right)-\frac{1}{E S} (T_{02} - T_{01})\right]$$
+
 As correntes podem ser estabelecidas para cada período climático - mas isso já seria implícito no cálculo geral? No final haverá uma temperatura/ distância determinante do projeto.
-
-### Projeto de isolamento (seção 9 e Anexo C)
-
-#### Desenvolvimento
-
-Histórico da formulação
-
-#### Aplicação
-
-A seção 9 provê as parcelas elétricas, a serem aplicadas nas distâncias de segurança (seçao 7) - motivo no qual se deve consultar a seção 9.
-
-|Regime | Condição | Risco térmico | Risco de falha | Símbolo | Fórmula | $K_{cs}$ típico |
-|--|--|--|--|--|--|--|
-|Nominal | Típica | 15% | $10^{-6}$ | $D_{Vtip,n}$ | $P_{bV} + 0,90 + P_{etip,n}$ | 1,35 |
-|  | Limite | 1% | $10^{-4}$ | $D_{Vlim,n}$ | $P_{bV} + 0,60 + P_{elim}$ | 1,25 |
-|Sobrecorrente | Típica | 5% | $10^{-4}$ | $D_{Vtip,s}$ | $P_{bV} + 0,60 + P_{etip,s}$ | 1.35 |
-|  | Limite | 1% | $10^{-4}$ | $D_{Vlim,s}$ | $P_{bV} + P_{elim}$ | 1,25 |
-
-
-Distâncias minímas fase-terra e entre fases.
 
 ### Distâncias verticais de segurança (seção 7)
 
@@ -142,14 +158,35 @@ Histórico, comparação com a versão 1985
 
 #### Aplicação
 
+|Regime | Condição | Risco térmico | Risco de falha | Símbolo | Fórmula | $K_{cs}$ típico |
+|--|--|--|--|--|--|--|
+|Nominal | Típica | 15% | $10^{-6}$ | $D_{Vtip,n}$ | $P_{bV} + 0,90 + P_{etip,n}$ | 1,35 |
+|  | Limite | 1% | $10^{-4}$ | $D_{Vlim,n}$ | $P_{bV} + 0,60 + P_{elim}$ | 1,25 |
+|Sobrecorrente | Típica | 5% | $10^{-4}$ | $D_{Vtip,s}$ | $P_{bV} + 0,60 + P_{etip,s}$ | 1.35 |
+|  | Limite | 1% | $10^{-4}$ | $D_{Vlim,s}$ | $P_{bV} + P_{elim}$ | 1,25 |
+
 * Distâncias verticais
 * Definição da altura básica do suporte
+
+### Projeto de isolamento (seção 9 e Anexo C)
+
+#### Desenvolvimento
+
+Histórico da formulação
+
+#### Aplicação
+
+Distâncias minímas fase-terra e entre fases.
 
 ### Ação mecânica do vento (seção 8)
 
 #### Desenvolvimento
 
 Semelhanças com IEC 60826 e particularidades na NBR
+
+Fator de turbulância.
+
+O fator $K_{tub}$ foi inicialmente apresentado por Silva Filho et al ([2005](Silva2005)), demonstrando que os esforços devidos ao vento, comparados ao modelo IEC, apresentavam uma variação entre 8% a 16%, sendo assim implementados nesta versão.
 
 Relação com a NBR 8850
 
@@ -158,9 +195,11 @@ Modelos de ângulo de balanço foram comparados com o modelo da NBR 5422:1985.
 1. MORS, H. Wind Pressure on Overhead Transmission Line Conductors – Hornisgrinde Testing Station. CIGRE Report 220, 1956.
 2. CIGRE WG 22.06. Probabilistic Design of Overhead Transmission Lines, Technical Brochure 178, February 2001.
 
-![Fator de efetividade do vento](figuras/balanco1.png "Fator de efetividade do vento")
+![Fator de efetividade do vento](figuras/balanco1.png)
+Comparação do fator de efetividade em algumas metodologias 
 
-![Comparação de ângulos de balanço](figuras/balanco2.png "Comparação de ângulos de balanço")
+![Comparação de ângulos de balanço](figuras/balanco2.png)
+Comparação do ângulo de balanço em algumas metodologias
 
 Por falta de consenso, manteve-se o modelo de 1985, ficando evidente a necessidade de desenvolvimentos conclusivos para uma amostragem representativa de cabos e vãos.
 
@@ -188,7 +227,7 @@ Artigos de referência para pesquisa em ventos de alta intensidade:
 
 Considerações quanto ao balanço.
 
-Distância entre linhas em um corredor copartilhado.
+Distância entre linhas em um corredor compartilhado.
 
 Consideração entre linhas paralelas com tensões distintas (entre condutores em suportes diferentes).
 
@@ -300,7 +339,7 @@ Aplicação da norma NBR 17140.
 
 ### Projeto executivo
 
-Algumas seções da norma somente serão aplicadas na etapa do projeto executivo, tais como:
+Algumas seções da norma somente serão aplicadas na etapa do projeto executivo.
 
 ### Projeto de travessias (seção 20)
 
@@ -314,4 +353,7 @@ Distância de segurança entre linhas
 
 1. <a name="Fuchs1982"></a> Fuchs, R.D. Projetos mecânicos das linhas aéreas de transmissão. Editora Blucher, 1982.
 1. <a name="Labegalini1992"></a> Labegalini, P.R., Labegalini, J.A., Fuchs, R.D. e Almeida, M.T. Projetos mecânicos das linhas aéreas de transmissão. 2ª edição, Editora Blucher, 1992.
+1. <a name="Cigre1992"></a> CIGRE WG 22.12. The thermal behaviour of overhead conductors, Electra, Nº 144, October 1992.
+1. <a name="Silva2005"></a>Silva Filho, J. I. et al. “Esforços devidos ao vento sobre componentes de LTs e fatores de correção normativos compatíveis com a realidade brasileira,” XVIII SNPTEE, GLT-19, Curitiba, 2005.
+1. <a name="CigreTB273"></a>CIGRE TF B2.11.04. Overhead conductor safe design tension with respect to aeolian vibrations, Technical brochure 273, June 2005. 
 1. <a name="PLSCADD"></a> Power Line Systems. Proposed workflow for PLS-CADD, https://www.powline.com/technotes/PLS-CADD_Workflow.pdf
