@@ -1,60 +1,66 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
-from enum import Enum
+from enum import Enum, auto
+"""
+Biblioteca de tipos aplicáveis as normas
+"""
 
 class rug(Enum):
       """
       Classe de rugosidade do terreno
       """
-      A = 0
-      B = 1
-      C = 2
-      D = 3
+      A = auto()
+      B = auto()
+      C = auto()
+      D = auto()
 
 class obs(Enum):
       """
       Tipo de obstáculos para distâncias verticais e horizontais
+      Tabelas 5 e 7
       """
-      PEDESTRE = 0
-      EDIFICACAO = 1
-      RODOVIA = 2
-      FERROVIA_NAO_ELETRIFICADA = 3
-      FERROVIA_ELETRIFICADA = 4
-      VEGETACAO_PERM = 5
-      MAQ_AGRICOLA = 6
-      SUPORTE_FERROVIA = 7
-      AGUAS_NAVEGAVEIS = 8
-      AGUAS_NAO_NAVEGAVEIS = 9
-      LINHA_TRANSMISSAO = 10
-      LINHA_TELECOM = 11
-      CULT_AGRIC_PERM = 12
-      INSTALACAO_TRANSP = 13
+      PEDESTRE = "acesso somente a pedestres"
+      EDIFICACAO = "edificação"
+      RODOVIA = "rodovia"
+      FERROVIA_NAO_ELETRIFICADA = "ferrovia não eletrificada"
+      FERROVIA_ELETRIFICADA = "ferrovia eletrificada"
+      VEGETACAO_PERM = "vegetação de preservação permanente"
+      MAQ_AGRICOLA = "máquinas agrícolas"
+      SUPORTE_FERROVIA = "suporte de linha pertencente à ferrovia"
+      AGUAS_NAVEGAVEIS = "águas navegáveis"
+      AGUAS_NAO_NAVEGAVEIS = "águas não navegáveis"
+      LINHA_TRANSMISSAO = "linha de energia elétrica"
+      LINHA_TELECOM = "linha de telecomunicações"
+      CULT_AGRIC_PERM = "cultura agrícola permanente"
+      INSTALACAO_TRANSP = "instalação transportadora"
 
 class gap(Enum):
       """
       Tipos de gap
+      Baseado na NBR 8186:2021, tanto fase-terra quando fase-fase
       """
-      CONDUTOR_BRACO = 0
-      CONDUTOR_JANELA = 1
-      CONDUTOR_PLANO_ABAIXO = 2
-      CONDUTOR_HASTE_ABAIXO = 3
-      CONDUTOR_ESTRUTURA_LATERAL = 4
-      ESTRUTURA_HASTE = 5
-      ANEL_ANEL = 6
-      CONDUTOR_CRUZADO = 7
-      CONDUTOR_PARALELO = 8
-      BARRAMENTO = 9
-      ASSIMETRICO = 10
+      CONDUTOR_BRACO = "condutor - braço de torre"
+      CONDUTOR_JANELA = "condutor - janela"
+      CONDUTOR_PLANO_ABAIXO = "condutor - plano abaixo"
+      CONDUTOR_HASTE_ABAIXO = "condutor - haste abaixo"
+      CONDUTOR_ESTRUTURA_LATERAL = "condutor - estrutura lateral"
+      ESTRUTURA_HASTE = "Estrutura - haste"
+      CONDUTOR_ESTAI = "condutor - estai"
+      ANEL_ANEL = "anel - anel"
+      CONDUTOR_CRUZADO = "condutores cruzados"
+      CONDUTOR_PARALELO = "condutores paralelos"
+      BARRAMENTO = "barramentos suportados por isolador"
+      ASSIMETRICO = "geometria assimétrica"
 
 class regiao(Enum):
       """
       Região geográfica
       """
-      CO = 0
-      N = 1
-      NE = 2
-      S = 3
-      SE = 4
+      CO = auto()
+      N = auto()
+      NE = auto()
+      S = auto()
+      SE = auto()
 
 class tensao(Enum):
       """
@@ -73,11 +79,27 @@ class tensao(Enum):
       _550kV = (500., 550.)
       _800kV = (765., 800.)
 
-      @staticmethod
       def nom(v) -> float:
+            # Valor nominal
             return v.value[0]
       
-      @staticmethod
       def max(v) -> float:
+            # Valor máximo
             return v.value[1]
 
+class amp(Enum):
+      """
+      Estados de regime e condições de referência
+      """
+      TIPICA_NOMINAL = ("tip,n", "Condição típica, regime nominal")
+      TIPICA_SOBRECORRENTE = ("tip,s", "Condição típica, regime sobrecorrente")
+      LIMITE_NOMINAL = ("lim,n", "Condição limite, regime nominal")
+      LIMITE_SOBRECORRENTE = ("lim,s", "Condição limite, regime sobrecorrente")
+
+      def suf(v) -> str:
+            # Sufixo
+            return v.value[0]
+      
+      def desc(v) -> str:
+            # Texto descritivo
+            return v.value[1]

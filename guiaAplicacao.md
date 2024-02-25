@@ -16,7 +16,7 @@ Algumas convenções do GitHub são utilizadas:
 > O texto nestas caixas são dicas práticas sobre a seção
 
 > [!IMPORTANT]
-> O texto nestes caixas são informações importantes para a aplicação da seção
+> O texto nestas caixas são informações importantes para a aplicação da seção
 
 ## Histórico
 

@@ -127,7 +127,7 @@ def espacFTFrenteRapida(ufr:float, kafr:float, kg=-1., zfr=0.03, kgfr=-1.) -> fl
   kzfr = 1. - 1.3 * zfr
   return ufr / (530. * kafr * kzfr * kgfr)
 
-def fatorAtmFrenteLenta(dra:float, h:float, d:float) -> float:
+def fatAtmFrenteLenta(dra:float, h:float, d:float) -> float:
   """
   Fator de correção atmosférico para impulsos de frente lenta, linhas CA
   dra - densidade relativa do ar
@@ -159,6 +159,40 @@ def fatCorrRug(rug: types.rug) -> float:
     case _:
       warn("Classe de rugosidade inválida.")
 
+def fatCorrInt3s(rug: types.rug) -> float:
+  """
+  Fator de correção do período de integração 3 s
+  Seção 4.9.4.3. - Tabela 2
+  """
+  match rug:
+    case types.rug.A:
+      return 1.31
+    case types.rug.B:
+      return 1.41
+    case types.rug.C:
+      return 1.58
+    case types.rug.D:
+      return 1.88
+    case _:
+      warn("Classe de rugosidade inválida.")
+
+def fatCorrInt30s(rug: types.rug) -> float:
+  """
+  Fator de correção do período de integração 30 s
+  Seção 8.2.2.1. - Tabela 9
+  """
+  match rug:
+    case types.rug.A:
+      return 1.17
+    case types.rug.B:
+      return 1.22
+    case types.rug.C:
+      return 1.30
+    case types.rug.D:
+      return 1.48
+    case _:
+      warn("Classe de rugosidade inválida.")
+
 def fatCorrAlt(rug: types.rug, alt: float) -> float:
   """
   Fator de correção da altura
@@ -177,7 +211,7 @@ def fatCorrAlt(rug: types.rug, alt: float) -> float:
       warn("Classe de rugosidade inválida.")
   return (alt/10)**alfa
 
-def fatorEfetividadeVento(v: float) -> float:
+def fatEfetividadeVento(v: float) -> float:
   """
   Fator de vento para correção do do ângulo de balanço com a velocidade do vento
   Figura 22
@@ -187,7 +221,7 @@ def fatorEfetividadeVento(v: float) -> float:
   else:
     return 3.68 * exp(-0.163*v) + 0.3
 
-def fatorKgFFFrenteLenta(gap: types.gap, alpha=0.33) -> float:
+def fatKgFFFrenteLenta(gap: types.gap, alpha=0.33) -> float:
   """
   Fator Kg fase-fase
 
@@ -224,7 +258,7 @@ def fatorKgFFFrenteLenta(gap: types.gap, alpha=0.33) -> float:
     raise ValueError('Fator alpha nao previsto')
 
 
-def fatorKgFTFrenteLenta(gap: types.gap) -> float:
+def fatKgFTFrenteLenta(gap: types.gap) -> float:
   """
   Fator Kg fase-terra
   Tabela C.1 (baseada na NBR 8186:2021)
@@ -260,7 +294,85 @@ def fatTurb(regiao: types.regiao) -> float:
     case _:
       raise ValueError('Regiao invalida')
 
-def fatorVentoCabo(rug: str, h: float) -> float:
+def distSegurancaVert(obstaculo: types.obs, regime: types.amp, h0: float, Us:float, Fsfl:float, kafl:float, zfl=0.06) -> float:
+  """
+  Distância vertical de segurança
+  Tabela 5
+  """
+  match obstaculo:
+    case types.obs.PEDESTRE:
+      kg = 1.47
+      hobs = 3.90
+      Pbv = 4.20
+    case types.obs.MAQ_AGRICOLA:
+      kg = 1.18
+      hobs = 4.00
+      Pbv = 4.40
+    case types.obs.RODOVIA:
+      kg = 1.18
+      hobs = 5.40
+      Pbv = 5.90
+    case types.obs.FERROVIA_NAO_ELETRIFICADA:
+      kg = 1.18
+      hobs = 6.40
+      Pbv = 6.90
+    case types.obs.FERROVIA_ELETRIFICADA:
+      kg = 1.40
+      hobs = 9.70
+      Pbv = 10.20
+    case types.obs.SUPORTE_FERROVIA:
+      kg = 1.18
+      hobs = h0
+      Pbv = 1.90
+    case types.obs.AGUAS_NAVEGAVEIS:
+      kg = 1.47
+      hobs = h0
+      Pbv = 4.20
+    case types.obs.AGUAS_NAO_NAVEGAVEIS:
+      kg = 1.47
+      hobs = 3.60
+      Pbv = 4.20
+    case types.obs.LINHA_TRANSMISSAO:
+      kg = 1.45
+      hobs = h0
+      Pbv = 0.80
+    case types.obs.LINHA_TELECOM:
+      kg = 1.45
+      hobs = h0
+      Pbv = 0.80
+    case types.obs.VEGETACAO_PERM:
+      kg = 1.18
+      hobs = h0
+      Pbv = 2.10
+    case types.obs.CULT_AGRIC_PERM:
+      kg = 1.18
+      hobs = h0
+      Pbv = 2.10
+    case types.obs.INSTALACAO_TRANSP:
+      kg = 1.18
+      hobs = h0
+      Pbv = 1.00
+    case _:
+      raise ValueError('Obstáculo inválido')
+
+  # Petipn e Petips são iguais
+  Petip = espacFTFrenteLenta(Us, 1.35, Fsfl, kafl, kg, zfl)
+  Pelim = espacFTFrenteLenta(Us, 1.25, Fsfl, kafl, kg, zfl)
+  match regime:
+    case types.amp.TIPICA_NOMINAL:
+      dv = max(Pbv + 0.90 + Petip, Pbv + 0.60 + Pelim + 0.90)
+    case types.amp.TIPICA_SOBRECORRENTE:
+      dv = Pbv + 0.60 + Petip
+    case types.amp.LIMITE_NOMINAL:
+      dv = Pbv + 0.60 + Pelim
+    case types.amp.LIMITE_SOBRECORRENTE:
+      dv = Pbv + Pelim
+    case _:
+      raise ValueError('Regime inválido')
+    
+  return dv
+      
+def fatVentoCabo(rug: str, h: float) -> float:
   """
   Fator combinado de vento aplicado a cabos
   Tabela 8
@@ -280,7 +392,7 @@ def fatorVentoCabo(rug: str, h: float) -> float:
     case _:
       raise valueError('Classe de rugosidade invalida')
 
-def fatorVentoVao(L: float) -> float:
+def fatVentoVao(L: float) -> float:
   """
   Fator de efetividade para correção do comprimento do vão
   Seção 8.5.2.2, Figura 17  
