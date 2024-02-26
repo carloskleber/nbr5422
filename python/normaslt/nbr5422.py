@@ -9,16 +9,23 @@ from normaslt import types
 Biblioteca de funções da NBR 5422:2024
 """
 
-def anguloBalanco(v:float, q0:float, d:float, pcond: float, Vv:float, Vp:float) -> float:
-  """
-  Ângulo de balanço
-  Seção 
+def anguloBalanco(v:float, q0:float, d:float, pcond: float, Lm:float, Lp:float) -> float:
+  """Ângulo de balanço
+  Seção 8.9.1
+
+  Argumentos:
+  v -- velocidade do vento em m/s
+  q0 -- pressão dinâmica em Pa
+  d -- diâmetro do cabo em m
+  pcond -- peso linear do cabo em N/m
+  Lm -- vão médio em m
+  Lp -- vão gravante em m
   """
   if v < 10:
     k = 1.0
   else:
     k = 3.68 * exp(-0.163*v) + 0.3
-  return atan2(k *q0 * d * Vv, pcond * Vp)
+  return atan2(k *q0 * d * Lm, pcond * Lp)
 
 def dra(p:float, t:float) -> float:
   """
@@ -30,20 +37,21 @@ def dra(p:float, t:float) -> float:
   return p/p0 * (273+t0)/(273+t)
 
 def espacFFFrenteLenta(Us:float, Kcs:float, Fsfl:float, kg:float, kafl:float, zfl=0.06, alpha=0.33) -> float:
-  """
-  Espaçamento fase-fase para sobretensões de frente lenta
+  """Espaçamento fase-fase para sobretensões de frente lenta
   Seção 9.4.2.4
   Calcula-se primeiro por Kishizima (https://doi.org/10.1109/TPAS.1984.318451),
   caso a distância fique acima a 4 m, recalcula-se pela fórmula do EPRI
   (AC Transmission Line Reference Book 200 kV and Above, 3rd ed., 2005).
   Caso d > 10 m, um warning é lançado.
-  Us = Tensão entre fases eficaz da linha em kV
-  Kcs = Fator de coordenação estatístico (Anexo C)
-  Fsfl = Fator de sobretensão de frente lenta
-  kafl = Fator de correção atmosférico
-  kg = Fator de gap entre fases, Anexo C
-  zfl = Variação de distribuição de probabilidade
-  alpha = Relação entre sobretensões de polaridade positiva e negativa: alpha = un/ (up + un)
+  
+  Argumentos:
+  Us -- Tensão entre fases eficaz da linha em kV
+  Kcs -- Fator de coordenação estatístico (Anexo C)
+  Fsfl -- Fator de sobretensão de frente lenta
+  kafl -- Fator de correção atmosférico
+  kg -- Fator de gap entre fases, Anexo C
+  zfl -- Variação de distribuição de probabilidade
+  alpha -- Relação entre sobretensões de polaridade positiva e negativa: alpha = un/ (up + un)
   """
   kzfl = 1 - 1.3*zfl
   d = 2.17 * exp(Kcs * sqrt(2) * Us * Fsfl / (1080 * kafl * kzfl * kg* sqrt(3)) - 1)
@@ -372,25 +380,45 @@ def distSegurancaVert(obstaculo: types.obs, regime: types.amp, h0: float, Us:flo
     
   return dv
       
-def fatVentoCabo(rug: str, h: float) -> float:
+def fatCombVentoCabo(rug: types.rug, h: float) -> float:
   """
   Fator combinado de vento aplicado a cabos
-  Tabela 8
+  Seção 8.5.2.3, Figura 16, Tabela 10
   """
   if h < 10:
     h = 10.
 
   match rug:
-    case 'A':
+    case types.rug.A:
       return 0.2914*log(h) + 1.0468
-    case 'B':
+    case types.rug.B:
       return 0.3733*log(h) + 0.9762
-    case 'C':
+    case types.rug.C:
       return 0.4936*log(h) + 0.9214
-    case 'D':
+    case types.rug.D:
       return 0.6153*log(h) + 0.8144
     case _:
-      raise valueError('Classe de rugosidade invalida')
+      raise ValueError('Classe de rugosidade invalida')
+
+def fatCombVentoSuportes(rug: types.rug, h: float) -> float:
+  """
+  Fator combinado de vento aplicado a suportes e cadeia de isoladores
+  Seção 8.6.3, Figura 18, Tabela 11
+  """
+  if h < 10:
+    h = 10.
+
+  match rug:
+    case types.rug.A:
+      return -0.0002 * h**2 + 0.0232 * h + 1.4661
+    case types.rug.B:
+      return -0.0002 * h**2 + 0.0274 * h + 1.6820
+    case types.rug.C:
+      return -0.0002 * h**2 + 0.0298 * h + 2.2744
+    case types.rug.D:
+      return -0.0002 * h**2 + 0.0384 * h + 2.9284
+    case _:
+      raise ValueError('Classe de rugosidade invalida')
 
 def fatVentoVao(L: float) -> float:
   """
@@ -403,6 +431,30 @@ def fatVentoVao(L: float) -> float:
     return 0.858
   else:
     return 1.693e-10*L**3 - 1.093e-7*L**2 - 0.0002686*L + 1.057
+
+def coefArrastoCabos(d: float) -> float:
+  """
+  Coeficiente de arrasto do cabo
+  Seção 8.5.2.1
+  """
+  if d <= 0.015:
+    return 1.0
+  else:
+    return 1.2
+
+def coefArrastoElemCilindrico(Vp: float, d: float) -> float:
+  """
+  Coeficiente de arrasto em suportes, elementos cilíndricos de grande diâmetro
+  Seção 8.8.3.2, Figura 21
+  """
+  Re = d * Vp/ 1.45e-5
+  if Re < 3e5:
+    Cxtc = 1.2
+  elif Re > 4.5e5:
+    Cxtc = 0.75
+  else:
+    Cxtc = -1.1098 * log(Re) + 15.197
+  return Cxtc
 
 def massaAr(alt:float, t:float) -> float:
   """

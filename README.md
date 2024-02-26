@@ -18,7 +18,7 @@ Existem duas implementações: a primeira versão em Matlab (compatível com Oct
 
 ## Guia de aplicação
 
-O [Guia de aplicação](guiaAplicacao.md) é um texto didático para a utilização da NBR 5422 e textos correlatos, explicando a filosofia dos critérios e exemplificando para algumas situações de projeto.
+O [Guia de aplicação](guiaAplicacao.pdf) é um texto didático para a utilização da NBR 5422 e textos correlatos, explicando a filosofia dos critérios e exemplificando para algumas situações de projeto.
 
 Este guia, assim como este repositório, é de uso aberto, aonde se espera contribuições dos membros do comitê da ABNT e usuários externos.
 
