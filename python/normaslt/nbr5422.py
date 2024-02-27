@@ -67,8 +67,7 @@ def espacFFFrenteLenta(Us:float, Kcs:float, Fsfl:float, kg:float, kafl:float, zf
   return d
 
 def espacFFFreqFund(Us:float, Ftmo:float, kaff:float, kgff=-1., zff=0.03, kg=-1.) -> float:
-  """
-  Espacamento fase-fase em frequência fundamental
+  """Espacamento fase-fase em frequência fundamental
   Seção 9.3.2.1
   Us = Tensão entre fases norminal eficaz em kV
   Ftmo = Fator da tensão máxima de operação em pu
@@ -86,8 +85,7 @@ def espacFFFreqFund(Us:float, Ftmo:float, kaff:float, kgff=-1., zff=0.03, kg=-1.
   return 1.64 * (exp(Us* Ftmo / (750 * kaff * kzff * kgff)) - 1) ** 0.833
 
 def espacFFFrenteRapida(ufr:float, kafr:float, kg=-1., zfr=0.03, kgfr=-1.) -> float:
-  """
-  Espaçamento fase-fase para sobretensões de frente rápida
+  """Espaçamento fase-fase para sobretensões de frente rápida
   Seção 9.5.2
   """
   if kg != -1.:
@@ -100,16 +98,14 @@ def espacFFFrenteRapida(ufr:float, kafr:float, kg=-1., zfr=0.03, kgfr=-1.) -> fl
   return 1.2 * ufr / (530. * kafr * kzfr * kgfr)
 
 def espacFTFrenteLenta(Us:float, Kcs:float, Fsfl:float, kafl:float, kg:float, zfl=0.06) -> float:
-  """
-  Espaçamento fase-terra para sobretensões de frente lenta
+  """Espaçamento fase-terra para sobretensões de frente lenta
   Seção 9.4.1.1
   """
   kzfl = 0.922 * (1-1.3 * zfl)
   return 2.17 * exp(Kcs*sqrt(2)*Us*Fsfl / (1080 * sqrt(3) * kafl * kzfl * kg) - 1)
 
 def espacFTFreqFund(Us:float, Ftmo:float, kaff:float, kgff=-1., zff=0.03, kg=-1.) -> float:
-  """
-  Espaçamento fase-terra para frequência fundamental
+  """Espaçamento fase-terra para frequência fundamental
   Seção 9.3.1.1
   """
   if kg != -1.:
@@ -122,8 +118,7 @@ def espacFTFreqFund(Us:float, Ftmo:float, kaff:float, kgff=-1., zff=0.03, kg=-1.
   return 1.64 * (exp(Us * Ftmo / (750 * sqrt(3) * kaff * kzff * kgff)) - 1)**0.833
 
 def espacFTFrenteRapida(ufr:float, kafr:float, kg=-1., zfr=0.03, kgfr=-1.) -> float:
-  """
-  Espaçamento fase-terra para sobretensões de frente rápida
+  """Espaçamento fase-terra para sobretensões de frente rápida
   Seção 9.5
   """
   if kg != -1.:
@@ -136,8 +131,7 @@ def espacFTFrenteRapida(ufr:float, kafr:float, kg=-1., zfr=0.03, kgfr=-1.) -> fl
   return ufr / (530. * kafr * kzfr * kgfr)
 
 def fatAtmFrenteLenta(dra:float, h:float, d:float) -> float:
-  """
-  Fator de correção atmosférico para impulsos de frente lenta, linhas CA
+  """Fator de correção atmosférico para impulsos de frente lenta, linhas CA
   dra - densidade relativa do ar
   h - umidade absoluta do ar em g/m3
   d - espaçamento no ar em m
@@ -151,8 +145,7 @@ def fatAtmFrenteLenta(dra:float, h:float, d:float) -> float:
   return dra**m2 * hc**m2
 
 def fatCorrRug(rug: types.rug) -> float:
-  """
-  Fator de correção da rugosidade do terreno
+  """Fator de correção da rugosidade do terreno
   Seção 4.9.4.2. - Tabela 1
   """
   match rug:
@@ -168,8 +161,7 @@ def fatCorrRug(rug: types.rug) -> float:
       warn("Classe de rugosidade inválida.")
 
 def fatCorrInt3s(rug: types.rug) -> float:
-  """
-  Fator de correção do período de integração 3 s
+  """Fator de correção do período de integração 3 s
   Seção 4.9.4.3. - Tabela 2
   """
   match rug:
@@ -185,8 +177,7 @@ def fatCorrInt3s(rug: types.rug) -> float:
       warn("Classe de rugosidade inválida.")
 
 def fatCorrInt30s(rug: types.rug) -> float:
-  """
-  Fator de correção do período de integração 30 s
+  """Fator de correção do período de integração 30 s
   Seção 8.2.2.1. - Tabela 9
   """
   match rug:
@@ -202,8 +193,7 @@ def fatCorrInt30s(rug: types.rug) -> float:
       warn("Classe de rugosidade inválida.")
 
 def fatCorrAlt(rug: types.rug, alt: float) -> float:
-  """
-  Fator de correção da altura
+  """Fator de correção da altura
   Seção 4.9.4.4. - Tabela 3
   """
   match rug:
@@ -220,8 +210,7 @@ def fatCorrAlt(rug: types.rug, alt: float) -> float:
   return (alt/10)**alfa
 
 def fatEfetividadeVento(v: float) -> float:
-  """
-  Fator de vento para correção do do ângulo de balanço com a velocidade do vento
+  """Fator de vento para correção do do ângulo de balanço com a velocidade do vento
   Figura 22
   """
   if v < 10.:
@@ -230,9 +219,7 @@ def fatEfetividadeVento(v: float) -> float:
     return 3.68 * exp(-0.163*v) + 0.3
 
 def fatKgFFFrenteLenta(gap: types.gap, alpha=0.33) -> float:
-  """
-  Fator Kg fase-fase
-
+  """Fator Kg fase-fase
   """
   if (alpha == 0.5):
     match gap:
@@ -267,8 +254,7 @@ def fatKgFFFrenteLenta(gap: types.gap, alpha=0.33) -> float:
 
 
 def fatKgFTFrenteLenta(gap: types.gap) -> float:
-  """
-  Fator Kg fase-terra
+  """Fator Kg fase-terra
   Tabela C.1 (baseada na NBR 8186:2021)
   """
   match gap:
@@ -288,8 +274,7 @@ def fatKgFTFrenteLenta(gap: types.gap) -> float:
       raise ValueError('Tipo invalido')
 
 def fatTurb(regiao: types.regiao) -> float:
-  """
-  Fator de turbulencia
+  """Fator de turbulencia
   Tabela 3
   """
   match regiao:
@@ -303,8 +288,7 @@ def fatTurb(regiao: types.regiao) -> float:
       raise ValueError('Regiao invalida')
 
 def distSegurancaVert(obstaculo: types.obs, regime: types.amp, h0: float, Us:float, Fsfl:float, kafl:float, zfl=0.06) -> float:
-  """
-  Distância vertical de segurança
+  """Distância vertical de segurança
   Tabela 5
   """
   match obstaculo:
@@ -381,8 +365,7 @@ def distSegurancaVert(obstaculo: types.obs, regime: types.amp, h0: float, Us:flo
   return dv
       
 def fatCombVentoCabo(rug: types.rug, h: float) -> float:
-  """
-  Fator combinado de vento aplicado a cabos
+  """Fator combinado de vento aplicado a cabos
   Seção 8.5.2.3, Figura 16, Tabela 10
   """
   if h < 10:
@@ -401,8 +384,7 @@ def fatCombVentoCabo(rug: types.rug, h: float) -> float:
       raise ValueError('Classe de rugosidade invalida')
 
 def fatCombVentoSuportes(rug: types.rug, h: float) -> float:
-  """
-  Fator combinado de vento aplicado a suportes e cadeia de isoladores
+  """Fator combinado de vento aplicado a suportes e cadeia de isoladores
   Seção 8.6.3, Figura 18, Tabela 11
   """
   if h < 10:
@@ -421,8 +403,7 @@ def fatCombVentoSuportes(rug: types.rug, h: float) -> float:
       raise ValueError('Classe de rugosidade invalida')
 
 def fatVentoVao(L: float) -> float:
-  """
-  Fator de efetividade para correção do comprimento do vão
+  """Fator de efetividade para correção do comprimento do vão
   Seção 8.5.2.2, Figura 17  
   """
   if L < 200:
@@ -433,8 +414,7 @@ def fatVentoVao(L: float) -> float:
     return 1.693e-10*L**3 - 1.093e-7*L**2 - 0.0002686*L + 1.057
 
 def coefArrastoCabos(d: float) -> float:
-  """
-  Coeficiente de arrasto do cabo
+  """Coeficiente de arrasto do cabo
   Seção 8.5.2.1
   """
   if d <= 0.015:
@@ -443,8 +423,7 @@ def coefArrastoCabos(d: float) -> float:
     return 1.2
 
 def coefArrastoElemCilindrico(Vp: float, d: float) -> float:
-  """
-  Coeficiente de arrasto em suportes, elementos cilíndricos de grande diâmetro
+  """Coeficiente de arrasto em suportes, elementos cilíndricos de grande diâmetro
   Seção 8.8.3.2, Figura 21
   """
   Re = d * Vp/ 1.45e-5
@@ -457,44 +436,41 @@ def coefArrastoElemCilindrico(Vp: float, d: float) -> float:
   return Cxtc
 
 def massaAr(alt:float, t:float) -> float:
-  """
-  Massa específica do ar para cálculo da pressão dinâmica do vento
+  """Massa específica do ar para cálculo da pressão dinâmica do vento
   Seção 4.7
   """
   return 1.225 * 288.15 / (t + 273.15) * exp(-1.2e-4 * alt)
 
 def risco(Kcs:float, Ngaps:int, sigma:float, sigma_S:float) -> float:
-    """
-    Cálculo do risco
-    Figuras C.1
-    Baseado na rotina risco_Kcs.py 
-    Kcs = coeficiente estatístico = U90/V2
-    Ngaps = número de gaps em paralelo
-    sigma = desvio-padrão das sobretensões
-    sigma_S = desvio-padrão da suportabilidade
-    """
+  """Cálculo do risco
+  Figuras C.1
+  Baseado na rotina risco_Kcs.py 
+  Kcs = coeficiente estatístico = U90/V2
+  Ngaps = número de gaps em paralelo
+  sigma = desvio-padrão das sobretensões
+  sigma_S = desvio-padrão da suportabilidade
+  """
 
-    #SOBRETENSÕES:
-    V50 = 1                   #valor médio (pu)
-    V2  = V50*(1+2.05*sigma_S)  #máxima estatística 2% (pu)
-    
-    #SUPORTABILIDADE:
-    U90 = Kcs*V2            #tensão com 90% de probabilidade de descarga (pu)
-    U50 = U90/(1-1.28*sigma)  #tensão com 50% de probabilidade de descarga (pu)
-    
-    #VETORES:
-    umin = V50*(1-5*sigma_S)
-    umax = U50*(1+5*sigma)
-    du = 0.001
-    u = np.arange(umin, umax, du)
-    sob = norm.pdf(u,V50,V50*sigma_S)
-    sup = norm.cdf(u,U50,U50*sigma)    
-    ris = sob*(1-(1-sup)**Ngaps)
-    return(sum(ris))
+  #SOBRETENSÕES:
+  V50 = 1                   #valor médio (pu)
+  V2  = V50*(1+2.05*sigma_S)  #máxima estatística 2% (pu)
+  
+  #SUPORTABILIDADE:
+  U90 = Kcs*V2            #tensão com 90% de probabilidade de descarga (pu)
+  U50 = U90/(1-1.28*sigma)  #tensão com 50% de probabilidade de descarga (pu)
+  
+  #VETORES:
+  umin = V50*(1-5*sigma_S)
+  umax = U50*(1+5*sigma)
+  du = 0.001
+  u = np.arange(umin, umax, du)
+  sob = norm.pdf(u,V50,V50*sigma_S)
+  sup = norm.cdf(u,U50,U50*sigma)    
+  ris = sob*(1-(1-sup)**Ngaps)
+  return(sum(ris))
 
 def umidAbs(dra:float, t:float) -> float:
-  """
-  Umidade absoluta do ar
+  """Umidade absoluta do ar
   Seção 4.6.1
   Usando DRA (em pu), ao contrário da fórmula que pede em porcentagem.
   """
