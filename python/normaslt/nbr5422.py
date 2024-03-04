@@ -12,20 +12,21 @@ Biblioteca de funções da NBR 5422:2024
 def anguloBalanco(v:float, q0:float, d:float, pcond: float, Lm:float, Lp:float) -> float:
   """Ângulo de balanço
   Seção 8.9.1
+  Equivalente a versão 1985
 
   Argumentos:
-  v -- velocidade do vento em m/s
+  v -- velocidade do vento em m/s referida a 30 s
   q0 -- pressão dinâmica em Pa
   d -- diâmetro do cabo em m
   pcond -- peso linear do cabo em N/m
-  Lm -- vão médio em m
-  Lp -- vão gravante em m
+  Lm -- vão médio (ou de vento) em m
+  Lp -- vão gravante (ou de peso) em m
   """
   if v < 10:
     k = 1.0
   else:
     k = 3.68 * exp(-0.163*v) + 0.3
-  return atan2(k *q0 * d * Lm, pcond * Lp)
+  return atan2(k * q0 * d * Lm, pcond * Lp)
 
 def dra(p:float, t:float) -> float:
   """

@@ -3,7 +3,7 @@
 from math import exp, sqrt
 from normaslt import types
 """
-Biblioteca de funções EN 50341-1:2001
+Biblioteca de funções EN 50341-1:2012
 Baseado na IEC 60071-1, IEC 60071-2 e Cigre Brochure 72
 """
 def fatorCorrAlt(h:float, m=1.) -> float:
