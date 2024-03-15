@@ -34,6 +34,9 @@ class obs(Enum):
       CULT_AGRIC_PERM = "cultura agrícola permanente"
       INSTALACAO_TRANSP = "instalação transportadora"
 
+      def __str__(self):
+        return self.value
+
 class gap(Enum):
       """
       Tipos de gap
@@ -51,6 +54,9 @@ class gap(Enum):
       CONDUTOR_PARALELO = "condutores paralelos"
       BARRAMENTO = "barramentos suportados por isolador"
       ASSIMETRICO = "geometria assimétrica"
+
+      def __str__(self):
+        return self.value
 
 class regiao(Enum):
       """
@@ -79,13 +85,12 @@ class tensao(Enum):
       _550kV = (500., 550.)
       _800kV = (765., 800.)
 
-      def nom(v) -> float:
-            # Valor nominal
-            return v.value[0]
-      
-      def max(v) -> float:
-            # Valor máximo
-            return v.value[1]
+      def __init__(self, no, ma):
+        self.nom = no
+        self.max = ma
+
+      def __str__(self):
+        return f"{self.nom} kV"
 
 class amp(Enum):
       """
@@ -96,10 +101,7 @@ class amp(Enum):
       LIMITE_NOMINAL = ("lim,n", "Condição limite, regime nominal")
       LIMITE_SOBRECORRENTE = ("lim,s", "Condição limite, regime sobrecorrente")
 
-      def suf(v) -> str:
-            # Sufixo
-            return v.value[0]
-      
-      def desc(v) -> str:
-            # Texto descritivo
-            return v.value[1]
+      def __init__(self, suf, desc):
+        self.suf = suf
+        self.desc = desc
+  

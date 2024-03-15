@@ -133,9 +133,9 @@ def espacFTFrenteRapida(ufr:float, kafr:float, kg=-1., zfr=0.03, kgfr=-1.) -> fl
 
 def fatAtmFrenteLenta(dra:float, h:float, d:float) -> float:
   """Fator de correção atmosférico para impulsos de frente lenta, linhas CA
-  dra - densidade relativa do ar
-  h - umidade absoluta do ar em g/m3
-  d - espaçamento no ar em m
+  dra = densidade relativa do ar
+  h = umidade absoluta do ar em g/m3
+  d = espaçamento no ar em m
   """
   hc = 1 + 0.012 * (h / dra - 11.)
   if d <= 3.5:
@@ -288,66 +288,75 @@ def fatTurb(regiao: types.regiao) -> float:
     case _:
       raise ValueError('Regiao invalida')
 
-def distSegurancaVert(obstaculo: types.obs, regime: types.amp, h0: float, Us:float, Fsfl:float, kafl:float, zfl=0.06) -> float:
+def distSegurancaVert(obstaculo: types.obs, regime: types.amp, hobs: float, Us:float, Fsfl:float, kafl:float, zfl=0.06) -> float:
   """Distância vertical de segurança
   Tabela 5
+  obstaculo = Tipo de obstáculo
+  regime = Regime e condição operativa, conforme Seção 5.4/ Tabela 4.
+  hobs = Altura do obstáculo, dependendo do tipo, será assumido o valor mínimo por norma
+  Us = Tensão nominal em kV
+  Fsfl =  
+  kafl =  
   """
   match obstaculo:
     case types.obs.PEDESTRE:
       kg = 1.47
-      hobs = 3.90
-      Pbv = 4.20
+      hmin = 3.90
+      dPbv = 0.30
     case types.obs.MAQ_AGRICOLA:
       kg = 1.18
-      hobs = 4.00
-      Pbv = 4.40
+      hmin = 4.00
+      dPbv = 0.40
     case types.obs.RODOVIA:
       kg = 1.18
-      hobs = 5.40
-      Pbv = 5.90
+      hmin = 5.40
+      dPbv = 0.50
     case types.obs.FERROVIA_NAO_ELETRIFICADA:
       kg = 1.18
-      hobs = 6.40
-      Pbv = 6.90
+      hmin = 6.40
+      dPbv = 0.50
     case types.obs.FERROVIA_ELETRIFICADA:
       kg = 1.40
-      hobs = 9.70
-      Pbv = 10.20
+      hmin = 9.70
+      dPbv = 0.50
     case types.obs.SUPORTE_FERROVIA:
       kg = 1.18
-      hobs = h0
-      Pbv = 1.90
+      hmin = 0.
+      dPbv = 1.90
     case types.obs.AGUAS_NAVEGAVEIS:
       kg = 1.47
-      hobs = h0
-      Pbv = 4.20
+      hmin = 0.
+      dPbv = 4.20
     case types.obs.AGUAS_NAO_NAVEGAVEIS:
       kg = 1.47
-      hobs = 3.60
-      Pbv = 4.20
+      hmin = 3.60
+      dPbv = 0.60
     case types.obs.LINHA_TRANSMISSAO:
       kg = 1.45
-      hobs = h0
-      Pbv = 0.80
+      hmin = 0.
+      dPbv = 0.80
     case types.obs.LINHA_TELECOM:
       kg = 1.45
-      hobs = h0
-      Pbv = 0.80
+      hmin = 0.
+      dPbv = 0.80
     case types.obs.VEGETACAO_PERM:
       kg = 1.18
-      hobs = h0
-      Pbv = 2.10
+      hmin = 0.
+      dPbv = 2.10
     case types.obs.CULT_AGRIC_PERM:
       kg = 1.18
-      hobs = h0
-      Pbv = 2.10
+      hmin = 0.
+      dPbv = 2.10
     case types.obs.INSTALACAO_TRANSP:
       kg = 1.18
-      hobs = h0
-      Pbv = 1.00
+      hmin = 0.
+      dPbv = 1.00
     case _:
       raise ValueError('Obstáculo inválido')
 
+  hobs = max(hmin, hobs)
+  Pbv = hobs + dPbv
+  
   # Petipn e Petips são iguais
   Petip = espacFTFrenteLenta(Us, 1.35, Fsfl, kafl, kg, zfl)
   Pelim = espacFTFrenteLenta(Us, 1.25, Fsfl, kafl, kg, zfl)
