@@ -31,7 +31,7 @@ def espacPowerFreq(k:float, u50rp=-1., un=-1., ftmo=1., fca=1., sigma=0.03) -> f
   if un != -1.:
     u50rp = un * ftmo * sqrt(2) /(sqrt(3)*(1-3*sigma)*fca)
   if u50rp == -1.:
-    raise("Necessário definir un ou u50rp.")
+    raise ("Necessário definir un ou u50rp.")
 
   d = 1.6458 * (exp(u50rp/(750 * sqrt(2)))-1)**0.8333
   if (d > 2):

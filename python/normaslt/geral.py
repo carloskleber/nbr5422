@@ -1,6 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
-from math import sinh
+from math import exp, pi, sin, sinh, sqrt
+import numpy as np
 from enum import Enum
 """
 Biblioteca geral de funções, não associadas a normas
@@ -123,16 +124,16 @@ def ampacidadeCigre(temp: float, velVento, ataque, tempAr, radglobal, alt, cabo:
   pc - perda por convecção
   """
   if temp < tempAr:
-    raise('Temperatura especificada no condutor inferior a temperatura ambiente.')
-  dcond = cabo.getDiametro();
-  tempCAref = cabo.getTempCA();
-  rCAref = cabo.getResistenciaCA();
-  gs = gSolar(absorcao, radglobal, dcond);
-  pr = pRad(dcond, emicond, temp, tempAr);
-  pc = CIGRE_PConv_i(velVento, ataque, tempAr, alt, temp, dcond, rugcond);
-  if length(tempCAref) < 2:
-  	raise('Dados insuficientes na tabela do cabo para determinação da resistência CA em função da temperatura.')	
-  rac = interp1(tempCAref, rCAref, temp, 'linear', 'extrap')
+    raise ValueError('Temperatura especificada no condutor inferior a temperatura ambiente.')
+  dcond = cabo.d
+  tempCAref = cabo.tCA
+  rCAref = cabo.rCA
+  gs = gSolar(absorcao, radglobal, dcond)
+  pr = pRad(dcond, emicond, temp, tempAr)
+  pc = CIGRE_PConv_i(velVento, ataque, tempAr, alt, temp, dcond, rugcond)
+  if len(tempCAref) < 2:
+  	raise ValueError('Dados insuficientes na tabela do cabo para determinação da resistência CA em função da temperatura.')	
+  rac = np.interp(temp, tempCAref, rCAref)
   corrente = sqrt(max(pr + pc - gs, 0) / rac)
   pc = CIGRE_PConv_f(velVento, ataque, tempAr, alt, temp, dcond, rugcond)
   return corrente, gs, pr, pc
@@ -165,7 +166,7 @@ def CIGRE_PConv_i(vvnt, ataque, tar, alt, tcond, dcond, rugcond):
   return pi * nusselt * lf * (tcond - tar)
 
 def CIGRE_PConvNatural_i(rayleigh):
-  if rayleigh <= 10000:
+  if rayleigh <= 1e4:
     return 0.85 * rayleigh**0.188
   else:
     return 0.48 * rayleigh**0.25
@@ -181,7 +182,7 @@ def CIGRE_PConvForcada_i(reynolds, ataque, rugcond):
     else:
       b1 = 0.048
       n = 0.8
-  nusselt = b1 * reynolds ^ n;  
+  nusselt = b1 * reynolds**n;  
   a1 = 0.42
   if ataque < 24*pi/180:
     b2 = 0.68
@@ -189,7 +190,7 @@ def CIGRE_PConvForcada_i(reynolds, ataque, rugcond):
   else:
     b2 = 0.58
     m1 = 0.9
-  return nusselt * (a1 + b2 * sin(ataque) ^ m1)
+  return nusselt * (a1 + b2 * sin(ataque)**m1)
 
 def CIGRE_PConv_f(vvnt, ataque, tar, alt, tcond, dcond, rugcond):
   tfilme = (tcond + tar) / 2
@@ -205,7 +206,7 @@ def CIGRE_PConv_f(vvnt, ataque, tar, alt, tcond, dcond, rugcond):
   if vvnt == 0:
     nusselt = CIGRE_PConvNatural_f(rayleigh);
     if nusselt < 0:
-      raise('Numero de Nusslet inferior a zero.')
+      raise Exception('Numero de Nusslet inferior a zero.')
   
   if vvnt != 0:
     ro_alt = exp(-0.000116 * alt)
@@ -213,40 +214,38 @@ def CIGRE_PConv_f(vvnt, ataque, tar, alt, tcond, dcond, rugcond):
     if vvnt >= 0.5:
       nusselt = CIGRE_PConvForcada_f(reynolds, ataque, rugcond)
       if nusselt < 0:
-        raise('Numero de Nusslet inferior a zero.')
+        raise Exception('Numero de Nusslet inferior a zero.')
       else:
         nusselt_a = CIGRE_PConvForcada_f(reynolds, 45, rugcond)
         nusselt_b = CIGRE_PConvForcada_f(reynolds, 90, rugcond)
         if nusselt_a < 0:
-          raise('Numero de Nusslet inferior a zero.')
+          raise Exception('Numero de Nusslet inferior a zero.')
         nusselt_b = 0.55 * nusselt_b
         if nusselt_b < 0:
-          raise('Numero de Nusslet inferior a zero.')
-        nusselt = Amax1(nusselt_a, nusselt_b, nusselt)
+          raise Exception('Numero de Nusslet inferior a zero.')
+        nusselt = max(nusselt_a, nusselt_b, nusselt)
     return pi * nusselt * lf * (tcond - tar)
 
-def CIGRE_PConvNatural_f(rayleigh):
-  i = fix(rayleigh / 100)  
-  if i > 1 & i < 100:
-    return 0.85 * rayleigh ^ 0.188
-  elif i > 101 & i < 10000:
-    return 0.48 * rayleigh ^ 0.25
+def CIGRE_PConvNatural_f(ra):
+  if (ra > 100) & (ra < 1e4):
+    return 0.85 * ra**0.188
+  elif ra < 1e6:
+    return 0.48 * ra**0.25
   else:
-    return -99
+    raise Exception('Numero de Rayleigh fora do alcance de validade.')
 
-def CIGRE_PConvForcada_f(reynolds, ataque, rugcond):
-  ire = fix(reynolds / 10)
-  if ire > 10 & ire < 265:
+def CIGRE_PConvForcada_f(re, ataque, rugcond):
+  if (re > 100) & (re < 2650):
     b1 = 0.641
     n = 0.471
-  elif ire > 266 & ire < 5000:
+  elif re < 5e4:
     if rugcond < 0.05:
       b1 = 0.178
       n = 0.633
     else:
       b1 = 0.048
       n = 0.8
-  nusselt = b1 * reynolds(i1) ^ n  
+  nusselt = b1 * re**n  
   a1 = 0.42
   if ataque < 24*pi/180:
     b2 = 0.68
@@ -254,6 +253,5 @@ def CIGRE_PConvForcada_f(reynolds, ataque, rugcond):
   else:
     b2 = 0.58
     m1 = 0.9
-  nusselt = nusselt * (a1 + b2 * sin(ataque) ^ m1)
-  return nusselt
+  return nusselt * (a1 + b2 * sin(ataque) **m1)
 

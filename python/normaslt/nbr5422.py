@@ -14,7 +14,7 @@ def anguloBalanco(v:float, q0:float, d:float, pcond: float, Lm:float, Lp:float) 
   Seção 8.9.1
   Equivalente a versão 1985
 
-  Argumentos:
+  Args:
   v -- velocidade do vento em m/s referida a 30 s
   q0 -- pressão dinâmica em Pa
   d -- diâmetro do cabo em m
@@ -27,6 +27,23 @@ def anguloBalanco(v:float, q0:float, d:float, pcond: float, Lm:float, Lp:float) 
   else:
     k = 3.68 * exp(-0.163*v) + 0.3
   return atan2(k * q0 * d * Lm, pcond * Lp)
+
+def anguloBalancoAssincrono(v: float, beta: float) -> tuple[float, float]:
+  """Ângulo de balanço assíncrono
+  Seção 8.9.3
+  Retorna a variação mínima e máxima do ângulo de balanço
+  
+  Args:
+  v -- vento de projeto em m/s
+  beta -- ângulo de balanço médio em rad
+
+  Returns:
+  bmin -- ângulo mínimo em rad
+  bmax -- ângulo máximo em rad
+  """
+  sigma = 2.25 * (1 - exp(-v**2/230.))
+  bmax = beta + 2 * sigma
+  bmin = beta - 2 * sigma
 
 def dra(p:float, t:float) -> float:
   """
@@ -45,7 +62,7 @@ def espacFFFrenteLenta(Us:float, Kcs:float, Fsfl:float, kg:float, kafl:float, zf
   (AC Transmission Line Reference Book 200 kV and Above, 3rd ed., 2005).
   Caso d > 10 m, um warning é lançado.
   
-  Argumentos:
+  Args:
   Us -- Tensão entre fases eficaz da linha em kV
   Kcs -- Fator de coordenação estatístico (Anexo C)
   Fsfl -- Fator de sobretensão de frente lenta
@@ -70,11 +87,13 @@ def espacFFFrenteLenta(Us:float, Kcs:float, Fsfl:float, kg:float, kafl:float, zf
 def espacFFFreqFund(Us:float, Ftmo:float, kaff:float, kgff=-1., zff=0.03, kg=-1.) -> float:
   """Espacamento fase-fase em frequência fundamental
   Seção 9.3.2.1
-  Us = Tensão entre fases norminal eficaz em kV
-  Ftmo = Fator da tensão máxima de operação em pu
-  kaff = 
-  kgff = Fator de gap entre fases
-  zff = (default 0.03)
+
+  Args:
+  Us -- Tensão entre fases norminal eficaz em kV
+  Ftmo -- Fator da tensão máxima de operação em pu
+  kaff -- 
+  kgff -- Fator de gap entre fases
+  zff -- (default 0.03)
   """
   if kg != -1.:
     kgff = 1.35*kg -0.35*kg**2
@@ -133,9 +152,11 @@ def espacFTFrenteRapida(ufr:float, kafr:float, kg=-1., zfr=0.03, kgfr=-1.) -> fl
 
 def fatAtmFrenteLenta(dra:float, h:float, d:float) -> float:
   """Fator de correção atmosférico para impulsos de frente lenta, linhas CA
-  dra = densidade relativa do ar
-  h = umidade absoluta do ar em g/m3
-  d = espaçamento no ar em m
+
+  Args:
+  dra -- densidade relativa do ar
+  h -- umidade absoluta do ar em g/m³
+  d -- espaçamento no ar em m
   """
   hc = 1 + 0.012 * (h / dra - 11.)
   if d <= 3.5:
@@ -291,12 +312,14 @@ def fatTurb(regiao: types.regiao) -> float:
 def distSegurancaVert(obstaculo: types.obs, regime: types.amp, hobs: float, Us:float, Fsfl:float, kafl:float, zfl=0.06) -> float:
   """Distância vertical de segurança
   Tabela 5
-  obstaculo = Tipo de obstáculo
-  regime = Regime e condição operativa, conforme Seção 5.4/ Tabela 4.
-  hobs = Altura do obstáculo, dependendo do tipo, será assumido o valor mínimo por norma
-  Us = Tensão nominal em kV
-  Fsfl =  
-  kafl =  
+
+  Args:
+  obstaculo -- Tipo de obstáculo
+  regime -- Regime e condição operativa, conforme Seção 5.4/ Tabela 4.
+  hobs -- Altura do obstáculo, dependendo do tipo, será assumido o valor mínimo por norma
+  Us -- Tensão nominal em kV
+  Fsfl --  
+  kafl --  
   """
   match obstaculo:
     case types.obs.PEDESTRE:
@@ -352,7 +375,7 @@ def distSegurancaVert(obstaculo: types.obs, regime: types.amp, hobs: float, Us:f
       hmin = 0.
       dPbv = 1.00
     case _:
-      raise ValueError('Obstáculo inválido')
+      raise ValueError('Tipo de obstáculo inválido')
 
   hobs = max(hmin, hobs)
   Pbv = hobs + dPbv
@@ -455,10 +478,12 @@ def risco(Kcs:float, Ngaps:int, sigma:float, sigma_S:float) -> float:
   """Cálculo do risco
   Figuras C.1
   Baseado na rotina risco_Kcs.py 
-  Kcs = coeficiente estatístico = U90/V2
-  Ngaps = número de gaps em paralelo
-  sigma = desvio-padrão das sobretensões
-  sigma_S = desvio-padrão da suportabilidade
+
+  Args:
+  Kcs -- coeficiente estatístico = U90/V2
+  Ngaps -- número de gaps em paralelo
+  sigma -- desvio-padrão das sobretensões
+  sigma_S -- desvio-padrão da suportabilidade
   """
 
   #SOBRETENSÕES:
@@ -482,7 +507,11 @@ def risco(Kcs:float, Ngaps:int, sigma:float, sigma_S:float) -> float:
 def umidAbs(dra:float, t:float) -> float:
   """Umidade absoluta do ar
   Seção 4.6.1
-  Usando DRA (em pu), ao contrário da fórmula que pede em porcentagem.
+  Usando DRA em pu, ao contrário da fórmula que pede em porcentagem.
+
+  Args:
+  dra --
+  t -- 
   """
   return (611. * dra * exp(17.6 * t/(243 + t))) / (0.4615 * (273 + t))
 
