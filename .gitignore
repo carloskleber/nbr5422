@@ -9,3 +9,5 @@ python/normaslt.egg-info/PKG-INFO
 refs
 python/.ipynb_checkpoints
 python/normaslt/.ipynb_checkpoints
+INMET*.CSV
+20*.zip
