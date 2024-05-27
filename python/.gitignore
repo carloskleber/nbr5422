@@ -1,3 +1,10 @@
 build
 dist
 __pycache__
+.venv
+normaslt.egg-info/dependency_links.txt
+normaslt.egg-info/SOURCES.txt
+normaslt.egg-info/top_level.txt
+normaslt.egg-info/PKG-INFO
+.ipynb_checkpoints
+normaslt/.ipynb_checkpoints
