@@ -6,7 +6,8 @@ import pandas as pd
 from enum import Enum
 from scipy.optimize import ridder
 import os.path
-import progressbar
+from tqdm import tqdm
+from urllib.request import urlretrieve
 from zipfile import ZipFile 
 """
 Biblioteca geral de funções, não associadas a normas
@@ -219,7 +220,6 @@ def tempCondutorCigre(amp: float, velVento: float, ataque: float, tempAr: float,
 
   return root
 
-
 def getEstacaoINMET(local: str, ano: int) -> tuple[str, float, float]:
   """Transcreve o local para o nome do arquivo INMET, de acordo com o período
   Também retorna latitude e longitude
@@ -231,17 +231,29 @@ def getEstacaoINMET(local: str, ano: int) -> tuple[str, float, float]:
       lat = -22.358052
       long = -49.028877
       s = 'INMET_SE_SP_A705_BAURU'
+    case 'Belém':
+      lat = -1.411228
+      long = -48.439512
+      s = 'INMET_N_PA_A201_BELEM'
+    case 'Bento Gonçalves':
+      lat = -29.164581
+      long = -51.534202
+      s = 'INMET_S_RS_A840_BENTO GONCALVES'
+    case 'Cuiabá':
+      lat = -15.559295
+      long = -56.062951
+      s = 'INMET_CO_MT_A901_CUIABA'
     case 'Rio de Janeiro':
       lat = -22.98833333
       long = -43.19055555
-      if ano > 2020:
+      if ano > 2018:
         s = 'INMET_SE_RJ_A652_RIO DE JANEIRO - FORTE DE COPACABANA'
       else:
         s = 'INMET_SE_RJ_A652_FORTE DE COPACABANA'
     case 'Teresópolis':
       lat = -22.4486111
       long = -42,98694444
-      if ano > 2020:
+      if ano > 2018:
         s = 'INMET_SE_RJ_A618_TERESOPOLIS-PARQUE NACIONAL'
       else:
         s = 'INMET_SE_RJ_A618_TERESOPOLIS'
@@ -257,13 +269,17 @@ def getEstacaoINMET(local: str, ano: int) -> tuple[str, float, float]:
       s = 'INMET_CO_MS_A709_IVINHEMA'
       lat = -22.30055555
       long = -53.82277777
+    case 'Manaus':
+      s = 'INMET_N_AM_A101_MANAUS'
+      lat = -3.10361111
+      long = -60.01555555
     case 'Rio Brilhante':
       s = 'INMET_CO_MS_A743_RIO BRILHANTE'
       lat = -21.77499999
       long = -54.52805554
     case _:
       raise ValueError('Localização inválida') 
-  if ano < 2021:
+  if ano < 2020:
     return f'{ano}/{s}', lat, long
   else:
     return s, lat, long
@@ -271,37 +287,81 @@ def getEstacaoINMET(local: str, ano: int) -> tuple[str, float, float]:
 def readEstacao(local: str, anoInic: int, anoFim: int) -> tuple[pd.DataFrame, float, float]:
   """Retorna o dataframe de um alcance de anos para uma estação INMET
   """
-  url = f'https://portal.inmet.gov.br/uploads/dadoshistoricos/{anoInic}.zip'
-  arqzip = f'{anoInic}.zip'
-  strlocal, lat, long = getEstacaoINMET(local, anoInic)
-  arq = f'{strlocal}_01-01-{anoInic}_A_31-12-{anoInic}.CSV'
-  if not(os.path.isfile(arqzip)):
-      urlretrieve(url, arqzip, progresso)
-  with ZipFile(arqzip) as zObject:
+  dados = pd.DataFrame()
+
+  for ano in range(anoInic, anoFim+1):
+    url = f'https://portal.inmet.gov.br/uploads/dadoshistoricos/{ano}.zip'
+    arqzip = f'{ano}.zip'
+    strlocal, lat, long = getEstacaoINMET(local, ano)
+    arq = f'{strlocal}_01-01-{ano}_A_31-12-{ano}.CSV'
+    if not(os.path.isfile(arqzip)):
+      download_with_progress(url, arqzip)
+    with ZipFile(arqzip) as zObject:
       zObject.extract(arq) 
-  df = pd.read_csv(arq, sep=';', skiprows=8, encoding='latin1', decimal=',')
+    df = pd.read_csv(arq, sep=';', skiprows=8, encoding='latin1', decimal=',')
+    df.drop(df.columns[df.columns.str.contains('unnamed', case=False)], axis=1, inplace=True)
+    # Acertando datas
+    if ano < 2019:
+      df = df.rename(columns={
+        'DATA (YYYY-MM-DD)': 'Data',
+        'HORA (UTC)': 'Hora UTC'
+      })
+    df['Tempo UTC'] = df['Data'] + df['Hora UTC']
+    df.drop(['Data', 'Hora UTC'], axis=1, inplace=True)
+    if ano < 2019:
+      df['Tempo UTC'] = pd.to_datetime(df['Tempo UTC'], format='%Y-%m-%d%H:%M')
+    else:
+      df['Tempo UTC'] = pd.to_datetime(df['Tempo UTC'], format='%Y/%m/%d%H%M UTC')
+
+    df = df.rename(columns={
+        "PRECIPITAÇÃO TOTAL, HORÁRIO (mm)" : "precTotal", 
+        "PRESSAO ATMOSFERICA AO NIVEL DA ESTACAO, HORARIA (mB)": "pMed", 
+        "PRESSÃO ATMOSFERICA MAX.NA HORA ANT. (AUT) (mB)": "pMax",
+        "PRESSÃO ATMOSFERICA MIN. NA HORA ANT. (AUT) (mB)": "pMin",
+        "RADIACAO GLOBAL (KJ/m²)": "rad",
+        "RADIACAO GLOBAL (Kj/m²)": "rad",
+        "TEMPERATURA DO AR - BULBO SECO, HORARIA (°C)": "tMed",
+        "TEMPERATURA MÁXIMA NA HORA ANT. (AUT) (°C)": "tMax", 
+        "TEMPERATURA MÍNIMA NA HORA ANT. (AUT) (°C)": "tMin",
+        "TEMPERATURA DO PONTO DE ORVALHO (°C)": "tOrv",
+        "TEMPERATURA ORVALHO MAX. NA HORA ANT. (AUT) (°C)": "tOrvMax",
+        "TEMPERATURA ORVALHO MIN. NA HORA ANT. (AUT) (°C)": "tOrvMin",
+        "UMIDADE RELATIVA DO AR, HORARIA (%)" : "umid",
+        "UMIDADE REL. MAX. NA HORA ANT. (AUT) (%)" : "umidMax",
+        "UMIDADE REL. MIN. NA HORA ANT. (AUT) (%)" : "umidMin",
+        "VENTO, DIREÇÃO HORARIA (gr) (° (gr))": "dirVento",
+        "VENTO, RAJADA MAXIMA (m/s)": "ventoRaj", 
+        "VENTO, VELOCIDADE HORARIA (m/s)": "ventoHor"})
+    # Considerando NaN da radiação solar igual a zero
+    df['rad'] = df['rad'] / 3.6 # convertendo kJ/m²/h por J/s (W/m²) 
+    df.fillna({'rad': 0}, inplace=True)
+    dados = pd.concat([dados, df], ignore_index=True)
   # Testando trocar dados inválidos por None em vez de NaN
-  df = df.replace(-9999, None)
-  df = df.rename(columns={
-      "PRECIPITAÇÃO TOTAL, HORÁRIO (mm)" : "precTotal", 
-      "PRESSAO ATMOSFERICA AO NIVEL DA ESTACAO, HORARIA (mB)": "pMed", 
-      "PRESSÃO ATMOSFERICA MAX.NA HORA ANT. (AUT) (mB)": "pMax",
-      "PRESSÃO ATMOSFERICA MIN. NA HORA ANT. (AUT) (mB)": "pMin",
-      "RADIACAO GLOBAL (KJ/m²)": "rad",
-      "RADIACAO GLOBAL (Kj/m²)": "rad",
-      "TEMPERATURA DO AR - BULBO SECO, HORARIA (°C)": "tMed",
-      "TEMPERATURA MÁXIMA NA HORA ANT. (AUT) (°C)": "tMax", 
-      "TEMPERATURA MÍNIMA NA HORA ANT. (AUT) (°C)": "tMin",
-      "TEMPERATURA DO PONTO DE ORVALHO (°C)": "tOrv",
-      "TEMPERATURA ORVALHO MAX. NA HORA ANT. (AUT) (°C)": "tOrvMax",
-      "TEMPERATURA ORVALHO MIN. NA HORA ANT. (AUT) (°C)": "tOrvMin",
-      "UMIDADE RELATIVA DO AR, HORARIA (%)" : "umid",
-      "UMIDADE REL. MAX. NA HORA ANT. (AUT) (%)" : "umidMax",
-      "UMIDADE REL. MIN. NA HORA ANT. (AUT) (%)" : "umidMin",
-      "VENTO, DIREÇÃO HORARIA (gr) (° (gr))": "dirVento",
-      "VENTO, RAJADA MAXIMA (m/s)": "ventoRaj", 
-      "VENTO, VELOCIDADE HORARIA (m/s)": "ventoHor"})
-  # Considerando NaN da radiação solar igual a zero
-  df['rad'] = df['rad'] / 3.6 # convertendo kJ/m²/h por J/s (W/m²) 
-  df['rad'].fillna(0, inplace=True)
-  return df, lat, long
+  # Trocar só no final porque com None o concat troca os tipos
+  dados = dados.replace(-9999, None)
+  dados = dados.infer_objects()
+  return dados, lat, long
+
+def download_with_progress(url, filename):
+  # Define a callback function to update the progress bar
+  def reporthook(block_num, block_size, total_size):
+      # Calculate the progress
+      progress.update(block_num * block_size - progress.n)
+
+  # Initialize the progress bar
+  with tqdm(total=100, unit='%', unit_scale=True, desc=filename) as progress:
+      urlretrieve(url, filename, reporthook)
+
+def progresso(block_num, block_size, total_size):
+  """Exibe barra de progresso para uso com urlretrieve
+  """
+  global pbar
+  if pbar is None:
+    pbar = progressbar.ProgressBar(maxval=total_size)
+    pbar.start()  
+  downloaded = block_num * block_size
+  if downloaded < total_size:
+    pbar.update(downloaded)
+  else:
+    pbar.finish()
+    pbar = None
