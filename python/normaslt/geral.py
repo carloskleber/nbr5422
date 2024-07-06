@@ -33,7 +33,8 @@ class dbCabo(Enum):
   CAA_RAIL     = ('CAA Rail',     0.02959, 0.0005168, 15.694,  119702.0, 6.51e10, 2.07e-5, [25, 50, 75, 100], [6.24E-05, 6.83E-05, 7.43E-05, 8.02E-05])
   CAA_HAWK     = ('CAA Hawk',     0.02179, 0.000281,  9.6138,   86455.5, 7.26e10, 1.89e-5, [25, 50, 75, 100], [0.0001227, 0.0001348, 0.0001469, 0.0001589])
   CA_COREOPSIS = ('CA Coreopsis', 0.03693, 0.0008058, 2.22041, 120143.0, 5.85e10, 2.30e-5, [25, 50, 75, 100], [3.95E-05, 4.29E-05, 4.63E-05, 4.97E-05])
-  CAL_CHLORINE = ('CAL Chlorine', 7.5e-3,  34.36e-6,  0.9463,  8.16e3,   0, 0, [], [])
+  CAL_CHLORINE = ('CAL Chlorine', 7.5e-3,  34.36e-6,  0.9463,    8.16e3,   0, 0, [], [])
+  CAL_SELENIUM  = ('CAL Selenium',29.25e-3, 506.04e-6,1.39364, 113.86e3,   0, 2.3e-5, [50, 100], [0.0679, 0.0679+50*0.0039]) # coef. 0.00390 /°C ref.: Prysmian
   CAL_OXYGEN   = ('CAL Oxygen',   23.75e-3,336.69e-6, 9.2725,  73.57e3,  0, 0, [], [])
 
   def __init__(self, desc, d, S, p, T, E, alfa1, tCA, rCA):
@@ -141,6 +142,10 @@ def ampacidadeCigre(temp: float, velVento, ataque, tempAr, radglobal, alt, cabo:
     corrente = sqrt(q/rac)
   return corrente
 
+def ampacidadeCigreMin(temp: float, amp: float, velVento, ataque, tempAr, radglobal, alt, cabo: dbCabo, rugcond=0.9, absorcao=0.93, emicond=0.95) -> float:
+  a = amp - ampacidadeCigre(temp, velVento, ataque, tempAr, radglobal, alt, cabo, rugcond, absorcao, emicond)
+  return a
+
 def pRad(dcond, emicond, tcond, tar):
   return pi * dcond * 5.6697e-8 * emicond * ((tcond + 273)**4 - (tar + 273)**4)
 
@@ -174,7 +179,7 @@ def CIGRE_PConvNatural(ra):
   elif ra < 1e6:
     return 0.48 * ra**0.25
   else:
-    raise Exception('Número de Rayleigh fora do alcance de validade.')
+    raise Exception(f'Número de Rayleigh fora do alcance de validade ({ra}) ')
 
 def CIGRE_PConvForcada(re, ataque, rugcond):
   if (re > 100) & (re < 2650):
@@ -214,13 +219,15 @@ def tempCondutorCigre(amp: float, velVento: float, ataque: float, tempAr: float,
   Returns:
   temp -- temperatura de operação (°C)
   """
+  if (np.isnan([velVento, tempAr, radglobal]).any()):
+    return np.nan
   t0 = tempAr
   t1 = tempAr + 150.
-  root = ridder(ampacidadeCigre, t0, t1, args=(velVento, ataque, tempAr, radglobal, alt, cabo, rugcond, absorcao, emicond))
-
+  root = ridder(ampacidadeCigreMin, t0, t1, args=(amp, velVento, ataque, tempAr, radglobal, alt, cabo, rugcond, absorcao, emicond))
+  
   return root
 
-def getEstacaoINMET(local: str, ano: int) -> tuple[str, float, float]:
+def getEstacaoINMET(local: str, ano: int) -> tuple[str, float, float, float]:
   """Transcreve o local para o nome do arquivo INMET, de acordo com o período
   Também retorna latitude e longitude
   Localizações das estações: https://mapas.inmet.gov.br/
@@ -234,11 +241,16 @@ def getEstacaoINMET(local: str, ano: int) -> tuple[str, float, float]:
     case 'Belém':
       lat = -1.411228
       long = -48.439512
+      alt = 21.17
       s = 'INMET_N_PA_A201_BELEM'
     case 'Bento Gonçalves':
       lat = -29.164581
       long = -51.534202
       s = 'INMET_S_RS_A840_BENTO GONCALVES'
+    case 'Brasília':
+      lat = -15.78944444
+      long = -47.92583332
+      s = 'INMET_CO_DF_A001_BRASILIA'
     case 'Cuiabá':
       lat = -15.559295
       long = -56.062951
@@ -246,17 +258,11 @@ def getEstacaoINMET(local: str, ano: int) -> tuple[str, float, float]:
     case 'Rio de Janeiro':
       lat = -22.98833333
       long = -43.19055555
+      alt = 25.59
       if ano > 2018:
         s = 'INMET_SE_RJ_A652_RIO DE JANEIRO - FORTE DE COPACABANA'
       else:
         s = 'INMET_SE_RJ_A652_FORTE DE COPACABANA'
-    case 'Teresópolis':
-      lat = -22.4486111
-      long = -42,98694444
-      if ano > 2018:
-        s = 'INMET_SE_RJ_A618_TERESOPOLIS-PARQUE NACIONAL'
-      else:
-        s = 'INMET_SE_RJ_A618_TERESOPOLIS'
     case 'Juti':
       s = 'INMET_CO_MS_A749_JUTI'
       lat = -22.85722222
@@ -273,18 +279,37 @@ def getEstacaoINMET(local: str, ano: int) -> tuple[str, float, float]:
       s = 'INMET_N_AM_A101_MANAUS'
       lat = -3.10361111
       long = -60.01555555
+      alt = 61.25
+    case 'Recife':
+      s = 'INMET_NE_PE_A301_RECIFE'
+      lat = -8.05928
+      long = -34.959239
+      alt = 11.3
     case 'Rio Brilhante':
       s = 'INMET_CO_MS_A743_RIO BRILHANTE'
       lat = -21.77499999
       long = -54.52805554
+    case 'São Paulo':
+      s = 'INMET_SE_SP_A701_SAO PAULO - MIRANTE'
+      lat = -23.496294
+      long = -46.620088
+      alt = 785.64
+    case 'Teresópolis':
+      lat = -22.4486111
+      long = -42,98694444
+      alt = 981
+      if ano > 2018:
+        s = 'INMET_SE_RJ_A618_TERESOPOLIS-PARQUE NACIONAL'
+      else:
+        s = 'INMET_SE_RJ_A618_TERESOPOLIS'
     case _:
       raise ValueError('Localização inválida') 
   if ano < 2020:
-    return f'{ano}/{s}', lat, long
+    return f'{ano}/{s}', lat, long, alt
   else:
-    return s, lat, long
+    return s, lat, long, alt
 
-def readEstacao(local: str, anoInic: int, anoFim: int) -> tuple[pd.DataFrame, float, float]:
+def readEstacao(local: str, anoInic: int, anoFim: int) -> tuple[pd.DataFrame, float, float, float]:
   """Retorna o dataframe de um alcance de anos para uma estação INMET
   """
   dados = pd.DataFrame()
@@ -292,7 +317,7 @@ def readEstacao(local: str, anoInic: int, anoFim: int) -> tuple[pd.DataFrame, fl
   for ano in range(anoInic, anoFim+1):
     url = f'https://portal.inmet.gov.br/uploads/dadoshistoricos/{ano}.zip'
     arqzip = f'{ano}.zip'
-    strlocal, lat, long = getEstacaoINMET(local, ano)
+    strlocal, lat, long, alt = getEstacaoINMET(local, ano)
     arq = f'{strlocal}_01-01-{ano}_A_31-12-{ano}.CSV'
     if not(os.path.isfile(arqzip)):
       download_with_progress(url, arqzip)
@@ -333,14 +358,14 @@ def readEstacao(local: str, anoInic: int, anoFim: int) -> tuple[pd.DataFrame, fl
         "VENTO, RAJADA MAXIMA (m/s)": "ventoRaj", 
         "VENTO, VELOCIDADE HORARIA (m/s)": "ventoHor"})
     # Considerando NaN da radiação solar igual a zero
+    df = df.replace(-9999, None)
+    df['rad'] = df['rad'].fillna(0)
     df['rad'] = df['rad'] / 3.6 # convertendo kJ/m²/h por J/s (W/m²) 
-    df.fillna({'rad': 0}, inplace=True)
     dados = pd.concat([dados, df], ignore_index=True)
   # Testando trocar dados inválidos por None em vez de NaN
   # Trocar só no final porque com None o concat troca os tipos
-  dados = dados.replace(-9999, None)
   dados = dados.infer_objects()
-  return dados, lat, long
+  return dados, lat, long, alt
 
 def download_with_progress(url, filename):
   # Define a callback function to update the progress bar
