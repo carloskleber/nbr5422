@@ -27,14 +27,17 @@ class dbCabo(Enum):
   rCA -- resistência CA para cada tCA em Ω/m
   """
 
+  # DADOS PROVISORIOS - checar
+
   #               desc            d        S          p        T         E        alfa1    tCA                rCA
   CAA_LINNET   = ('CAA Linnet',   0.01831, 0.0001982, 6.75713,  62509.3, 7.26e10, 1.89e-5, [25, 50, 75, 100], [0.0001738, 0.0001909, 0.0002081, 0.0002252])
   CAA_GROSBEAK = ('CAA Grosbeak', 0.02515, 0.0003788, 12.7736, 111245.0, 7.26e10, 1.89e-5, [25, 50, 75, 100], [9.22E-05, 0.0001012, 0.0001103, 0.0001193])
   CAA_RAIL     = ('CAA Rail',     0.02959, 0.0005168, 15.694,  119702.0, 6.51e10, 2.07e-5, [25, 50, 75, 100], [6.24E-05, 6.83E-05, 7.43E-05, 8.02E-05])
   CAA_HAWK     = ('CAA Hawk',     0.02179, 0.000281,  9.6138,   86455.5, 7.26e10, 1.89e-5, [25, 50, 75, 100], [0.0001227, 0.0001348, 0.0001469, 0.0001589])
+  CAA_ZEBRA    = ('CAA Zebra',    0.02858, 0.000482,  16.19,   133e3,    7.26e10, 1.89e-5, [25, 75, 100], [0.042e-3, 0.0524e-3, 0.0568e-3])
   CA_COREOPSIS = ('CA Coreopsis', 0.03693, 0.0008058, 2.22041, 120143.0, 5.85e10, 2.30e-5, [25, 50, 75, 100], [3.95E-05, 4.29E-05, 4.63E-05, 4.97E-05])
-  CAL_CHLORINE = ('CAL Chlorine', 7.5e-3,  34.36e-6,  0.9463,    8.16e3,   0, 0, [], [])
-  CAL_SELENIUM  = ('CAL Selenium',29.25e-3, 506.04e-6,1.39364, 113.86e3,   0, 2.3e-5, [50, 100], [0.0679, 0.0679+50*0.0039]) # coef. 0.00390 /°C ref.: Prysmian
+  CAL_CHLORINE = ('CAL Chlorine', 7.5e-3,  34.36e-6,  9.463,    8.16e3,   0, 0, [], [])
+  CAL_SELENIUM  = ('CAL Selenium',29.25e-3, 506.04e-6,13.9364, 113.86e3,   0, 2.3e-5, [50, 100], [0.0679, 0.0679+50*0.0039]) # coef. 0.00390 /°C ref.: Prysmian
   CAL_OXYGEN   = ('CAL Oxygen',   23.75e-3,336.69e-6, 9.2725,  73.57e3,  0, 0, [], [])
 
   def __init__(self, desc, d, S, p, T, E, alfa1, tCA, rCA):
@@ -237,6 +240,7 @@ def getEstacaoINMET(local: str, ano: int) -> tuple[str, float, float, float]:
     case 'Bauru':
       lat = -22.358052
       long = -49.028877
+      alt = 636.17
       s = 'INMET_SE_SP_A705_BAURU'
     case 'Belém':
       lat = -1.411228
@@ -246,14 +250,17 @@ def getEstacaoINMET(local: str, ano: int) -> tuple[str, float, float, float]:
     case 'Bento Gonçalves':
       lat = -29.164581
       long = -51.534202
+      alt = 623.27
       s = 'INMET_S_RS_A840_BENTO GONCALVES'
     case 'Brasília':
       lat = -15.78944444
       long = -47.92583332
+      alt = 1159.54
       s = 'INMET_CO_DF_A001_BRASILIA'
     case 'Cuiabá':
       lat = -15.559295
       long = -56.062951
+      alt = 240
       s = 'INMET_CO_MT_A901_CUIABA'
     case 'Rio de Janeiro':
       lat = -22.98833333
@@ -267,14 +274,17 @@ def getEstacaoINMET(local: str, ano: int) -> tuple[str, float, float, float]:
       s = 'INMET_CO_MS_A749_JUTI'
       lat = -22.85722222
       long = -54.60555555
+      alt = 375.18
     case 'Dourados':
       s = 'INMET_CO_MS_A721_DOURADOS'
       lat = -22.19388888
       long = -54.91138888
+      alt = 463.3
     case 'Ivinhema':
       s = 'INMET_CO_MS_A709_IVINHEMA'
       lat = -22.30055555
       long = -53.82277777
+      alt = 377.36
     case 'Manaus':
       s = 'INMET_N_AM_A101_MANAUS'
       lat = -3.10361111
@@ -289,6 +299,7 @@ def getEstacaoINMET(local: str, ano: int) -> tuple[str, float, float, float]:
       s = 'INMET_CO_MS_A743_RIO BRILHANTE'
       lat = -21.77499999
       long = -54.52805554
+      alt = 324.31
     case 'São Paulo':
       s = 'INMET_SE_SP_A701_SAO PAULO - MIRANTE'
       lat = -23.496294
