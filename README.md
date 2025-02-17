@@ -10,17 +10,19 @@ Rotinas em Matlab/ Octave e Python das fórmulas, para conferência e demonstra�
 
 Este repositório foi utilizado durante a revisão da norma ABNT NBR 5422, e com sua publicação em 2024, servirá como meio de divulgação e discussão. Um dos objetivos é a comparação da NBR 5422:2024 com a versão anterior e outras metodologias, tais como IEC, IEEE e EN.
 
-Este repositório não substitui o texto original da norma. A NBR 5422 pode ser obtido na ABNT: https://www.abntcatalogo.com.br/pnm.aspx?Q=R2hENVV5YXEvQ2todGFyaWlScWtsR3d5WHBEdEpWV1VlVVhhd1lQS2trND0=
+Este repositório não substitui o texto original da norma e não tem relação direta com a ABNT. A NBR 5422 pode ser obtida em https://www.abntcatalogo.com.br/pnm.aspx?Q=R2hENVV5YXEvQ2todGFyaWlScWtsR3d5WHBEdEpWV1VlVVhhd1lQS2trND0=
 
 ## Utilização
 
-Existem duas implementações: a primeira versão em Matlab (compatível com Octave) e a segunda, mais recente, em Python. Consulte o README em cada pasta para instruções específicas.
+Existem duas implementações: a primeira versão em Matlab (compatível com Octave) encontra-se descontinuada. A versão mais recente encontra-se em Python com exemplos didáticos em Jupyter. Consulte o README em cada pasta para instruções específicas.
 
 ## Guia de aplicação
 
-O [Guia de aplicação](guiaAplicacao.pdf) é um texto didático para a utilização da NBR 5422 e textos correlatos, explicando a filosofia dos critérios e exemplificando para algumas situações de projeto.
+O [Guia de aplicação](guiaAplicacao.pdf) é um texto didático para a utilização da NBR 5422 e textos correlatos, explicando a filosofia dos critérios e exemplificando algumas situações de projeto.
 
-Este guia, assim como este repositório, é de uso aberto, aonde se espera contribuições dos membros do comitê da ABNT e usuários externos.
+Este guia, assim como este repositório, é de uso aberto, aonde contribuições são bemvindas. O texto, até que seja dito ao contrário, é _work in progress_! Caso o utilize em algum estudo favor referenciar como:
+
+    (autores). NBR 5422:2024 - Guia de Aplicação, v.x, (data de release). Disponível em https://github.com/carloskleber/nbr5422. Acesso em: (data de acesso).
 
 # Licença
 
@@ -28,7 +30,7 @@ O repositório está sob a licença GPL 3.0, cuja tradução pode ser vista em: 
 
 O repositório não tem qualquer afiliação com a ABNT.
 
-Caso tenha encontrado qualquer violação de propriedade intelecutal, entre em contato.
+Caso tenha encontrado qualquer violação de propriedade intelectual, entre em contato.
 
 # Roadmap
 

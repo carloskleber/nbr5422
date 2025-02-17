@@ -390,3 +390,82 @@ def progresso(block_num, block_size, total_size):
   else:
     pbar.finish()
     pbar = None
+
+def plot_dimension(ax, start, end, offset=0.2, text_offset=0.1, label=""):
+    """
+    Desenha uma linha de cota
+    
+    :param ax: Matplotlib Axes object
+    :param start: (x, y) tuple for the start point
+    :param end: (x, y) tuple for the end point
+    :param offset: Distance of the dimension line from the object
+    :param text_offset: Distance of the text from the dimension line
+    :param label: Label for the dimension
+    """
+    x1, y1 = start
+    x2, y2 = end
+
+    dx, dy = x2 - x1, y2 - y1
+    length = np.hypot(dx, dy)
+    angle = np.degrees(np.arctan2(dy, dx))
+    if not label:
+      label = f'{length:.2f}'
+    unit_dx, unit_dy = dx / length, dy / length
+    perp_dx, perp_dy = -unit_dy * offset, unit_dx * offset
+    dim_start = (x1 + perp_dx, y1 + perp_dy)
+    dim_end = (x2 + perp_dx, y2 + perp_dy)
+    ax.plot([x1, dim_start[0]], [y1, dim_start[1]], 'k-', lw=0.5)
+    ax.plot([x2, dim_end[0]], [y2, dim_end[1]], 'k-', lw=0.5)
+    ax.plot([dim_start[0], dim_end[0]], [dim_start[1], dim_end[1]], 'k-', lw=0.5)
+
+    # Draw arrowheads
+    arrow_size = 0.05 * length
+    ax.arrow(dim_start[0], dim_start[1], unit_dx * arrow_size, unit_dy * arrow_size,
+             head_width=0.05, head_length=0.05, fc='k', ec='k')
+    ax.arrow(dim_end[0], dim_end[1], -unit_dx * arrow_size, -unit_dy * arrow_size,
+             head_width=0.05, head_length=0.05, fc='k', ec='k')
+
+    # Add rotated text at the middle of the dimension line
+    text_x, text_y = (dim_start[0] + dim_end[0]) / 2, (dim_start[1] + dim_end[1]) / 2
+    text_x += text_offset * np.cos(np.radians(angle))  # Offset text slightly
+    text_y += text_offset * np.sin(np.radians(angle))
+    
+    ax.text(text_x, text_y, label, ha='center', va='bottom', fontsize=10, 
+            rotation=angle, rotation_mode="anchor")
+
+def minDistance(A, B, E):
+  """
+  Determina a distancia minima entre um ponto E e um segmento de reta AB 
+  Baseado em https://www.geeksforgeeks.org/minimum-distance-from-a-point-to-the-line-segment-using-vectors/
+	"""
+  AB = [None, None]
+  AB[0] = B[0] - A[0]
+  AB[1] = B[1] - A[1]
+  BE = [None, None]
+  BE[0] = E[0] - B[0]
+  BE[1] = E[1] - B[1]
+  AE = [None, None]
+  AE[0] = E[0] - A[0]
+  AE[1] = E[1] - A[1] 
+  AB_BE = AB[0] * BE[0] + AB[1] * BE[1]; 
+  AB_AE = AB[0] * AE[0] + AB[1] * AE[1]; 
+
+	# Minimum distance from 
+	# point E to the line segment 
+  reqAns = 0 
+  if (AB_BE > 0):
+    y = E[1] - B[1] 
+    x = E[0] - B[0] 
+    reqAns = sqrt(x * x + y * y) 
+  elif (AB_AE < 0):
+    y = E[1] - A[1] 
+    x = E[0] - A[0] 
+    reqAns = sqrt(x * x + y * y) 
+  else:
+    x1 = AB[0] 
+    y1 = AB[1] 
+    x2 = AE[0] 
+    y2 = AE[1] 
+    mod = sqrt(x1 * x1 + y1 * y1) 
+    reqAns = abs(x1 * y2 - y1 * x2) / mod 	
+  return reqAns
