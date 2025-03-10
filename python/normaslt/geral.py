@@ -1,6 +1,6 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
-from math import exp, pi, sin, sinh, sqrt
+from math import exp, log, pi, sin, sinh, sqrt
 import numpy as np
 import pandas as pd
 from enum import Enum
@@ -70,7 +70,7 @@ def equacaoEstado(p, A, T0, S, E, alfa1, t0, t1) -> tuple[float, float]:
   f -- flecha final [m]
   T2 -- tração final [N]
 
-  TODO prever alteração no peso final (ex. forca do vento)
+  TODO prever alteração no peso final (ex. força do vento)
   """
   
   if alfa1 == 0:
@@ -229,6 +229,46 @@ def tempCondutorCigre(amp: float, velVento: float, ataque: float, tempAr: float,
   root = ridder(ampacidadeCigreMin, t0, t1, args=(amp, velVento, ataque, tempAr, radglobal, alt, cabo, rugcond, absorcao, emicond))
   
   return root
+
+def parametrosGumbel(n: int) -> tuple[float, float]:
+  """Cálculo dos parâmetros de Gumbel
+
+  n -- período de observação
+
+  Returns:
+  c1
+  c2
+  """
+  c1 = 0.
+  c2 = 0.
+  zi = [0.0] * n
+  for i in range(n):
+    zi[i] = -log(-log((i + 1) / (n + 1)))
+  for a in zi:
+    c2 += a
+  c2 = c2 / n
+  for a in zi:
+    c1 += (a - c2)**2
+  c1 = sqrt(c1 / n)
+
+  return c1, c2
+
+def calcVelVento(vel: float, anos: int, tret: float, cv: float) -> float:
+  """Cálculo da velocidade do vento para um tempo de registro, média e desvio padrão (coeficiente de variação)
+  Baseado na distribuição de Gumbel
+
+  vel -- Média das velocidades máximas anuais da série de dados
+  anos -- Tempo de registro (anos)
+  tret -- Tempo de retorno (anos)
+  cv -- Coeficiente de variação da série de dados (pu)
+
+  Returns:
+  v -- Velocidade do vento para o tempo de retorno
+  """
+  (c1, c2) = parametrosGumbel(anos)
+  ktn = (-log(-log(1 - 1. / tret)) - c2) / c1
+    
+  return vel * (1. + ktn * cv)
 
 def getEstacaoINMET(local: str, ano: int) -> tuple[str, float, float, float]:
   """Transcreve o local para o nome do arquivo INMET, de acordo com o período

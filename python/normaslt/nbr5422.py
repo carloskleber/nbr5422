@@ -1,6 +1,6 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
-from math import atan2, exp, log, sqrt
+from math import atan2, exp, log, sqrt, radians
 import numpy as np
 from scipy.stats import norm
 from warnings import warn
@@ -9,10 +9,9 @@ from normaslt import types
 Biblioteca de funções da NBR 5422:2024
 """
 
-def anguloBalanco(v:float, q0:float, d:float, pcond: float, Lm:float, Lp:float) -> float:
+def anguloBalanco(v: float, q0: float, d: float, pcond: float, Lm=1., Lp=1., VpVv=-1.) -> float:
   """Ângulo de balanço
   Seção 8.9.1
-  Equivalente a versão 1985
 
   Args:
   v -- velocidade do vento em m/s referida a 30 s
@@ -21,12 +20,16 @@ def anguloBalanco(v:float, q0:float, d:float, pcond: float, Lm:float, Lp:float) 
   pcond -- peso linear do cabo em N/m
   Lm -- vão médio (ou de vento) em m
   Lp -- vão gravante (ou de peso) em m
+  VpVv -- relação vão de peso por vão de vento
   """
+  if VpVv == -1:
+    VpVv = Lp/Lm
+
   if v < 10:
     k = 1.0
   else:
     k = 3.68 * exp(-0.163*v) + 0.3
-  return atan2(k * q0 * d * Lm, pcond * Lp)
+  return atan2(k * q0 * d, pcond * VpVv)
 
 def anguloBalancoAssincrono(v: float, beta: float) -> tuple[float, float]:
   """Ângulo de balanço assíncrono
@@ -42,8 +45,10 @@ def anguloBalancoAssincrono(v: float, beta: float) -> tuple[float, float]:
   bmax -- ângulo máximo em rad
   """
   sigma = 2.25 * (1 - exp(-v**2/230.))
-  bmax = beta + 2 * sigma
-  bmin = beta - 2 * sigma
+  bmax = beta + 2 * radians(sigma)
+  bmin = beta - 2 * radians(sigma)
+
+  return bmin, bmax
 
 def dra(p:float, t:float) -> float:
   """
