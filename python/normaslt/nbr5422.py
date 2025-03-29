@@ -171,7 +171,7 @@ def fatAtmFrenteLenta(dra:float, h:float, d:float) -> float:
   m2 = 1.25 * g0 * (g0 - 0.2)
   return dra**m2 * hc**m2
 
-def fatCorrRug(rug: types.rug) -> float:
+def fatCorrRug(rug=types.rug.B) -> float:
   """Fator de correção da rugosidade do terreno
   Seção 4.9.4.2. - Tabela 1
   """
@@ -187,7 +187,7 @@ def fatCorrRug(rug: types.rug) -> float:
     case _:
       warn("Classe de rugosidade inválida.")
 
-def fatCorrInt3s(rug: types.rug) -> float:
+def fatCorrInt3s(rug=types.rug.B) -> float:
   """Fator de correção do período de integração 3 s
   Seção 4.9.4.3. - Tabela 2
   """
@@ -203,7 +203,7 @@ def fatCorrInt3s(rug: types.rug) -> float:
     case _:
       warn("Classe de rugosidade inválida.")
 
-def fatCorrInt30s(rug: types.rug) -> float:
+def fatCorrInt30s(rug=types.rug.B) -> float:
   """Fator de correção do período de integração 30 s
   Seção 8.2.2.1. - Tabela 9
   """
@@ -219,7 +219,7 @@ def fatCorrInt30s(rug: types.rug) -> float:
     case _:
       warn("Classe de rugosidade inválida.")
 
-def fatCorrAlt(rug: types.rug, alt: float) -> float:
+def fatCorrAlt(alt: float, rug=types.rug.B) -> float:
   """Fator de correção da altura
   Seção 4.9.4.4. - Tabela 3
   """
