@@ -39,6 +39,13 @@ def anguloBalanco(v:float, q0:float, d:float, pcond: float, Vv:float, Vp:float) 
   """
   Ângulo de balanço
   Seção 8.9.1
+
+  v - vento de projeto (m/s)
+  q0 - pressão de vento (Pa)
+  d - diâmetro do cabo (m)
+  pcond - peso linear do cabo (N/m)
+  Vv - vão de vento (m)
+  Vp - vão de peso (m)
   """
   if v < 10:
     k = 1.0
@@ -59,17 +66,14 @@ def distHorizFF(du: float) -> float:
   d2 = 0.37 * sqrt(f) + 0.0076 * du
   return max(d1, d2) 
 
-def distHorizFFAlt(v:float, pu:float) -> float:
+def distHorizFFAlt(v:float, pu:float, a=1.15, b=1.03, k=1.40) -> float:
   """
   Distância horizontal entre fases no suporte - método alternativo
   Seção 10.2.2
   """
-  a = 1.15
-  b = 1.03
-  k = 1.40
   return (v * pu * a / (500 * k))**1.667 * b
 
-def distVertFT(du:float, obs:types.obs) -> float:
+def distVertFT(du:float, obs=types.obs.PEDESTRE) -> float:
   """
   Distância mínima do condutor ao solo ou obstáculos - método convencional
   Seção 10.3.1
@@ -77,6 +81,8 @@ def distVertFT(du:float, obs:types.obs) -> float:
   du = Valor numericamente igual a tensão máxima de operação em kV
   obs = Tipo de obstáculo (enumeração)
   """
+  if (du <= 87.):
+    return a
   match obs: # Tabela 5
     case types.obs.PEDESTRE:
       a = 6.
@@ -86,12 +92,9 @@ def distVertFT(du:float, obs:types.obs) -> float:
       a = 1.2
     case _:
       a = 0. 
-  if (du <= 87.):
-    return a
-  else:
-    return a + 0.01 * (du/sqrt(3) - 50)
+  return a + 0.01 * (du/sqrt(3) - 50)
   
-def distVertFTAlt(du:float, vl:float, pu:float, obs:types.obs) -> float:
+def distVertFTAlt(du:float, vl:float, pu:float, obs=types.obs.PEDESTRE) -> float:
   """
   Distância mínima do condutor ao solo ou obstáculos - método alternativo
   Seção 10.3.2
@@ -119,3 +122,41 @@ def distVertFTAlt(du:float, vl:float, pu:float, obs:types.obs) -> float:
   a2 = 1.15
   b = 1.03  
   return a1 + ((sqrt(2*du/3) * pu * vl) * a2 / (500. * k))**1.667 * b * c
+
+def fatCorrAlt(alt: float, rug=types.rug.B) -> float:
+  """Fator de correção da altura
+  Seção ...
+  """
+  match rug:
+    case types.rug.A:
+      alfa = 0.110
+    case types.rug.B:
+      alfa = 0.160
+    case types.rug.C:
+      alfa = 0.220
+    case types.rug.D:
+      alfa = 0.280
+    case _:
+      warn("Classe de rugosidade inválida.")
+  return (alt/10)**alfa
+
+def fatCorrInt(t, rug=types.rug.B) -> float:
+  """Fator de correção do período de integração
+  Seção 4.8.3 - Figura 1
+
+  OBS.: a figura na NBR não coincide em escala com a da IEC 60826 (convergindo para 10 min), apesar de ser a mesma referência.
+
+  :param t: período de integração (s)
+  :param rug: Categoria do terreno
+  """
+  match rug:
+    case types.rug.A:
+      return 1.17
+    case types.rug.B:
+      return -0.069 * log(t) + 1.4488 # ajuste de curva no Excel - confirmar se Kint(600) = 1
+    case types.rug.C:
+      return 1.30
+    case types.rug.D:
+      return 1.48
+    case _:
+      warn("Classe de rugosidade inválida.")

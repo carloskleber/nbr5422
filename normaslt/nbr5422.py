@@ -142,8 +142,8 @@ def espacFTFreqFund(Us:float, Ftmo:float, kaff:float, kgff=-1., zff=0.03, kg=-1.
   kzff = 1. - 3. * zff
   return 1.64 * (exp(Us * Ftmo / (750 * sqrt(3) * kaff * kzff * kgff)) - 1)**0.833
 
-def espacFTFrenteRapida(ufr:float, kafr:float, kg=-1., zfr=0.03, kgfr=-1.) -> float:
-  """Espaçamento fase-terra para sobretensões de frente rápida
+def espacFTFrenteRapidaPos(ufr:float, kafr:float, kg=-1., zfr=0.03, kgfr=-1.) -> float:
+  """Espaçamento fase-terra para sobretensões de frente rápida, polaridade positiva
   Seção 9.5
   """
   if kg != -1.:
@@ -154,6 +154,22 @@ def espacFTFrenteRapida(ufr:float, kafr:float, kg=-1., zfr=0.03, kgfr=-1.) -> fl
   
   kzfr = 1. - 1.3 * zfr
   return ufr / (530. * kafr * kzfr * kgfr)
+
+def espacFTFrenteRapidaNeg(ufr:float, kafr:float, kg=-1., zfr=0.03, kgfr=-1.) -> float:
+  """Espaçamento fase-terra para sobretensões de frente rápida, polaridade negativa
+  Seção 9.5
+  """
+  if kg != -1.:
+    if kg <= 1.44:
+      kgfr = 1.5 - 0.5 * kg
+    else:
+      kgfr = 0.78
+
+  if kgfr == -1.:
+    raise("Necessário definir kg ou kgfr.")
+  
+  kzfr = 1. - 1.3 * zfr
+  return ufr / (700. * kafr * kzfr * kgfr)
 
 def fatAtmFrenteLenta(dra:float, h:float, d:float) -> float:
   """Fator de correção atmosférico para impulsos de frente lenta, linhas CA
@@ -314,7 +330,7 @@ def fatTurb(regiao: types.regiao) -> float:
     case _:
       raise ValueError('Regiao invalida')
 
-def distSegurancaVert(obstaculo: types.obs, regime: types.amp, hobs: float, Us:float, Fsfl:float, kafl:float, zfl=0.06) -> float:
+def distSegurancaVert(obstaculo: types.obs, regime: types.amp, hobs: float, Us:float, Fsfl:float, kafl:float, zfl=0.06) -> tuple[float, float, float]:
   """Distância vertical de segurança
   Tabela 5
 
@@ -400,7 +416,7 @@ def distSegurancaVert(obstaculo: types.obs, regime: types.amp, hobs: float, Us:f
     case _:
       raise ValueError('Regime inválido')
     
-  return dv
+  return dv, Petip, Pelim
       
 def fatCombVentoCabo(rug: types.rug, h: float) -> float:
   """Fator combinado de vento aplicado a cabos
