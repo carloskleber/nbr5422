@@ -12,9 +12,18 @@ Este repositório foi utilizado durante a revisão da norma ABNT NBR 5422, e com
 
 Este repositório não substitui o texto original da norma e não tem relação direta com a ABNT. A NBR 5422 pode ser obtida em https://www.abntcatalogo.com.br/pnm.aspx?Q=R2hENVV5YXEvQ2todGFyaWlScWtsR3d5WHBEdEpWV1VlVVhhd1lQS2trND0=
 
+## Instalação
+
+Aplica-se o procedimento usual em Python:
+* Criar ambiente virtual: `python -m venv .venv`
+* Entrar no ambiente virtual: `source .venv/bin/activate`
+* Baixar os requisitos: `pip install -r requirements.txt`
+
 ## Utilização
 
-Existem duas implementações: a primeira versão em Matlab (compatível com Octave) encontra-se descontinuada. A versão mais recente encontra-se em Python com exemplos didáticos em Jupyter. Consulte o README em cada pasta para instruções específicas.
+Esta versão é dividida em duas partes: as bibliotecas, que contém as fórmulas da norma, e os demos, implementados em notebooks iPython (Jupyter) para uma melhor apresentação e interatividade.
+
+Nas bibliotecas também serão implementadas outras normas, no qual poderão ser feitas comparações a partir de um mesmo projeto base.
 
 ## Guia de aplicação
 
