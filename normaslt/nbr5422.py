@@ -496,26 +496,27 @@ def massaAr(alt:float, t:float) -> float:
   return 1.225 * 288.15 / (t + 273.15) * exp(-1.2e-4 * alt)
 
 def risco(Kcs:float, Ngaps:int, sigma:float, sigma_S:float) -> float:
-  """Cálculo do risco
+  """Cálculo do risco de falha em uma configuração de gaps em paralelo,
+  razão entre suportabilidade e sobretensão e seus respectivos desvios-padrão. 
+  
   Figuras C.1
   Baseado na rotina risco_Kcs.py 
 
-  Args:
-  Kcs -- coeficiente estatístico = U90/V2
-  Ngaps -- número de gaps em paralelo
-  sigma -- desvio-padrão das sobretensões
-  sigma_S -- desvio-padrão da suportabilidade
+  :param Kcs: Coeficiente estatístico = U90/V2
+  :param Ngaps: Número de gaps em paralelo
+  :param sigma: Desvio-padrão das sobretensões
+  :param sigma_S: Desvio-padrão da suportabilidade
   """
 
-  #SOBRETENSÕES:
-  V50 = 1                   #valor médio (pu)
-  V2  = V50*(1+2.05*sigma_S)  #máxima estatística 2% (pu)
+  # Sobretensões
+  V50 = 1 # valor médio (pu)
+  V2  = V50*(1+2.05*sigma_S) # máxima estatística 2% (pu)
   
-  #SUPORTABILIDADE:
-  U90 = Kcs*V2            #tensão com 90% de probabilidade de descarga (pu)
-  U50 = U90/(1-1.28*sigma)  #tensão com 50% de probabilidade de descarga (pu)
+  # Suportabilidade
+  U90 = Kcs*V2 # tensão com 90% de probabilidade de descarga (pu)
+  U50 = U90/(1-1.28*sigma) # tensão com 50% de probabilidade de descarga (pu)
   
-  #VETORES:
+  # Vetores
   umin = V50*(1-5*sigma_S)
   umax = U50*(1+5*sigma)
   du = 0.001

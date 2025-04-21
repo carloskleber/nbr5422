@@ -4,7 +4,7 @@
 
 Metodologia da norma ABNT NBR 5422:2024 "Projeto de linhas aéreas de energia elétrica - Critérios técnicos"
 
-Rotinas em Matlab/ Octave e Python das fórmulas, para conferência e demonstração dos conceitos apresentados.
+Rotinas em Python das fórmulas, para conferência e demonstração dos conceitos apresentados.
 
 ## Introdução
 
@@ -35,9 +35,11 @@ Este guia, assim como este repositório, é de uso aberto, aonde contribuições
 
 # Licença
 
-O repositório está sob a licença GPL 3.0, cuja tradução pode ser vista em: http://licencas.softwarelivre.org/gpl-3.0.pt-br.pdf
+O repositório está sob a licença GPL 3.0: https://www.gnu.org/licenses/gpl-3.0.en.html
 
 O repositório não tem qualquer afiliação com a ABNT.
+
+O código contido aqui deve ser considerado *em desenvolvimento*, e salvo qualquer anúncio, *não se encontra validado para produção*, devendo ser utilizado unicamente para pesquisa acadêmica.
 
 Caso tenha encontrado qualquer violação de propriedade intelectual, entre em contato.
 
