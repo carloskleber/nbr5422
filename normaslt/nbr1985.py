@@ -1,57 +1,84 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
-from math import atan2, exp, log, sqrt
+from math import atan2, exp, log, pi, radians, sin, sqrt
 from normaslt import types
-"""
-Biblioteca de funções NBR 5422:1985
+"""Biblioteca de funções NBR 5422:1985
 """
 
 def massaAr(alt:float, t:float) -> float:
-  """
-  Massa específica do ar - seção 8.2.1.1
+  """Massa específica do ar - seção 8.2.1.1
   """
   return 1.293 / (1 + 0.00367 * t) * (16000 + 64 + t - alt)/(16000 + 64 + t + alt)
 
-def correcaoVentoRetorno(v) -> float:
-  """
-  Correção da velocidade de vento obtida para um tempo de retorno especificado
-  
-  n - número de anos de coleta de dados
-  t - período de retorno
-  vm - velocidade média
-  ktn - valor de frequência
-  alfa - parâmetro de localização da distribuição de Gumbel
-  beta - parâmetro de forma da distribuição de Gumbel  
-  """
+def correcaoVentoPeriodoRetornoSecao4(alfa, beta, T) -> float:
+  """Correção da velocidade de vento obtida para um tempo de retorno especificado
+  De acordo com Seção 4.8.2
+  Os parâmetros de distribuição de Gumbel referem-se a um período de retorno de 50 anos.
 
+  :param alfa: Parâmetro de localização (ou estimador do fator de escala) da distribuição de Gumbel
+  :param beta: Parâmetro de forma (ou estimador do fator de posição) da distribuição de Gumbel
+  :param T: Período de retorno
   """
-  i = 1:n
-  zi = -log(-log(i/(n+1)))
-  c1 = 1/n * sum(zi)
-  c2 = 1/sqrt(n) * sum(zi^2 - zm^2)
-  ct = -log(-log(1+1/t))
-  ktn = (c2-ct)/c1
-  alfa = c1/s
-  beta = vm - c2/s
-  """
+  return beta - (log(-log(1 - 1/T)))/alfa
 
-def anguloBalanco(v:float, q0:float, d:float, pcond: float, Vv:float, Vp:float) -> float:
+def correcaoVentoPeriodoRetornoAnexoC(vb:float, T:float, Vmed:float, sigmaV: float) -> float:
+  """Correção do vento de projeto para um período de retorno
+  De acordo com Seção C.3
+
+  :param vb: Velocidade de projeto para tempo de retorno de 50 anos
+  :param Vmed: Valor médio das velocidades de vento máxima anuais registradas durante n anos
+  :param sigmaV: Desvio padrão das velocidades registradas
   """
-  Ângulo de balanço
+  d = sigmaV/ Vmed
+  a = 1 - 0.45 * d
+  b = sqrt(6)/ pi * d
+  c = 1 + 2.59 * d
+  vt = vb * (a + b*(-log(-log(1 - 1/T))))/ c
+  return T
+
+
+def anguloBalanco(v: float, q0: float, d: float, pcond: float, Lm=1., Lp=1., VpVv=-1.) -> float:
+  """Cálcuo de ângulo de balanço
   Seção 8.9.1
 
-  v - vento de projeto (m/s)
-  q0 - pressão de vento (Pa)
-  d - diâmetro do cabo (m)
-  pcond - peso linear do cabo (N/m)
-  Vv - vão de vento (m)
-  Vp - vão de peso (m)
+  Args:
+  v -- velocidade do vento referida a 30 s (m/s)
+  q0 -- pressão dinâmica (Pa)
+  d -- diâmetro do cabo (m)
+  pcond -- peso linear do cabo (N/m)
+  Lm -- vão médio (ou de vento) (m)
+  Lp -- vão gravante (ou de peso) (m)
+  VpVv -- relação vão de peso por vão de vento
   """
+  if VpVv == -1:
+    VpVv = Lp/Lm
+
   if v < 10:
     k = 1.0
   else:
     k = 3.68 * exp(-0.163*v) + 0.3
-  return atan2(k *q0 * d * Vv, pcond * Vp)
+  return atan2(k * q0 * d, pcond * VpVv)
+
+def anguloBalancoDeflexao(v: float, q0: float, d: float, pcond: float, theta: float, T: float, Lm: float, Lp: float) -> float:
+  """Ângulo de balanço considerando deflexão na estrutura
+  Adaptado da fórmula original
+
+  Args:
+  v -- velocidade do vento referida a 30 s (m/s)
+  q0 -- pressão dinâmica (Pa)
+  d -- diâmetro do cabo (m)
+  pcond -- peso linear do cabo (N/m)
+  theta -- Ângulo de deflexão (graus)
+  T -- Tração (N)
+  Lm -- vão médio (ou de vento) (m)
+  Lp -- vão gravante (ou de peso) (m)
+  """
+
+  if v < 10:
+    k = 1.0
+  else:
+    k = 3.68 * exp(-0.163*v) + 0.3
+  return atan2(k * (q0 * d * Lm + 2 * T * sin(0.5 *radians(theta))), pcond * Lp)
 
 def distHorizFF(du: float) -> float:
   """
