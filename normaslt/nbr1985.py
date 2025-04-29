@@ -38,17 +38,16 @@ def correcaoVentoPeriodoRetornoAnexoC(vb:float, T:float, Vmed:float, sigmaV: flo
 
 
 def anguloBalanco(v: float, q0: float, d: float, pcond: float, Lm=1., Lp=1., VpVv=-1.) -> float:
-  """Cálcuo de ângulo de balanço
+  """Cálculo de ângulo de balanço
   Seção 8.9.1
 
-  Args:
-  v -- velocidade do vento referida a 30 s (m/s)
-  q0 -- pressão dinâmica (Pa)
-  d -- diâmetro do cabo (m)
-  pcond -- peso linear do cabo (N/m)
-  Lm -- vão médio (ou de vento) (m)
-  Lp -- vão gravante (ou de peso) (m)
-  VpVv -- relação vão de peso por vão de vento
+  :param v: Velocidade do vento referida a 30 s (m/s)
+  :param q0: Pressão dinâmica (Pa)
+  :param d: Diâmetro do cabo (m)
+  :param pcond: Peso linear do cabo (N/m)
+  :param Lm: Vão médio (ou de vento) (m)
+  :param Lp: Vão gravante (ou de peso) (m)
+  :param VpVv: Relação vão de peso por vão de vento
   """
   if VpVv == -1:
     VpVv = Lp/Lm
@@ -63,15 +62,14 @@ def anguloBalancoDeflexao(v: float, q0: float, d: float, pcond: float, theta: fl
   """Ângulo de balanço considerando deflexão na estrutura
   Adaptado da fórmula original
 
-  Args:
-  v -- velocidade do vento referida a 30 s (m/s)
-  q0 -- pressão dinâmica (Pa)
-  d -- diâmetro do cabo (m)
-  pcond -- peso linear do cabo (N/m)
-  theta -- Ângulo de deflexão (graus)
-  T -- Tração (N)
-  Lm -- vão médio (ou de vento) (m)
-  Lp -- vão gravante (ou de peso) (m)
+  :param v: Velocidade do vento referida a 30 s (m/s)
+  :param q0: Pressão dinâmica (Pa)
+  :param d: Diâmetro do cabo (m)
+  :param pcond: Peso linear do cabo (N/m)
+  :param theta: Ângulo de deflexão (graus)
+  :param T: Tração (N)
+  :param Lm: Vão médio (ou de vento) (m)
+  :param Lp: Vão gravante (ou de peso) (m)
   """
 
   if v < 10:
@@ -80,15 +78,15 @@ def anguloBalancoDeflexao(v: float, q0: float, d: float, pcond: float, theta: fl
     k = 3.68 * exp(-0.163*v) + 0.3
   return atan2(k * (q0 * d * Lm + 2 * T * sin(0.5 *radians(theta))), pcond * Lp)
 
-def distHorizFF(du: float) -> float:
+def distHorizFF(du: float, f: float) -> float:
   """
   Distância horizontal entre fases no suporte - método convencional
   Seção 10.2.1 - tabela 4
 
   Válido entre fases de mesmo circuito ou circuitos diferentes, sendo
-  Du = diferença fasorial das tensões entre os dois circuitos.
+  :param Du: Diferença fasorial das tensões entre os dois circuitos (kV).
+  :param f: Flecha 
   """
-  f = 60.
   d1 = 0.22 + 0.01 * du
   d2 = 0.37 * sqrt(f) + 0.0076 * du
   return max(d1, d2) 
@@ -97,6 +95,8 @@ def distHorizFFAlt(v:float, pu:float, a=1.15, b=1.03, k=1.40) -> float:
   """
   Distância horizontal entre fases no suporte - método alternativo
   Seção 10.2.2
+  :param v: valor de crista entre fases (kV)
+  :param pu: Sobretensão de manobra (pu crista), para probabilidade 98% de não ser excedido
   """
   return (v * pu * a / (500 * k))**1.667 * b
 

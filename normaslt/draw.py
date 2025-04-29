@@ -109,9 +109,15 @@ def plot_cadeia(ax, pt, l, ang=0, nc=1, esp=0.457, angsc=0., style='r', wcad=20,
     start_angle = -90
     end_angle = -90+ang
     sweep = (end_angle - start_angle) % 360
-    ax.gca().add_patch(Arc(pt, 2*angle_offset, 2*angle_offset, angle=0, 
-      theta1=start_angle, theta2=start_angle + sweep,
-      color='black', lw=1))
+    if ang < 0:
+      ax.gca().add_patch(Arc(pt, 2*angle_offset, 2*angle_offset, angle=0, 
+        theta1=start_angle + sweep, theta2=start_angle,
+        color='black', lw=1))
+      angle_offset = -angle_offset
+    else:
+      ax.gca().add_patch(Arc(pt, 2*angle_offset, 2*angle_offset, angle=0, 
+        theta1=start_angle, theta2=start_angle + sweep,
+        color='black', lw=1))
     mid_angle = np.radians((start_angle + sweep / 2) % 360)
     label_pos = pt + (angle_offset + text_offset) * np.array([np.cos(mid_angle), np.sin(mid_angle)])
     ax.text(label_pos[0], label_pos[1], f"{ang:.1f}°", 
@@ -119,7 +125,7 @@ def plot_cadeia(ax, pt, l, ang=0, nc=1, esp=0.457, angsc=0., style='r', wcad=20,
       bbox=dict(facecolor='white', edgecolor='none', boxstyle='round,pad=0.1'))
   return pts
 
-def plot_balanco(ax, pt, l, ang, angmin=0., angmax=0., nc=1, esp=0.457, angsc=0., style='r', angle_offset=0.5, text_offset=0.3):
+def plot_balanco(ax, pt, l, ang, angmin=0., angmax=0., nc=1, esp=0.457, angsc=0., style='r', angle_offset=0.5, text_offset=0.3, style_delta='b'):
   """
   Desenha um feixe de condutores em balanço (meio do vão)
   O feixe é posicionado de forma que os subcondutores superiores fiquem no final do comprimento da cadeia
@@ -154,6 +160,8 @@ def plot_balanco(ax, pt, l, ang, angmin=0., angmax=0., nc=1, esp=0.457, angsc=0.
     start_angle = -90
     end_angle = -90+ang
     sweep = (end_angle - start_angle) % 360
+    ax.gca().add_patch(Arc(pt, 2*l, 2*l, angle=0, 
+      theta1=start_angle, theta2=start_angle + sweep, lw=0.5, color='r'))
     ax.gca().add_patch(Arc(pt, 2*angle_offset, 2*angle_offset, angle=0, 
       theta1=start_angle, theta2=start_angle + sweep,
       color='black', lw=1))
@@ -162,6 +170,8 @@ def plot_balanco(ax, pt, l, ang, angmin=0., angmax=0., nc=1, esp=0.457, angsc=0.
     ax.text(label_pos[0], label_pos[1], f"{ang:.1f}°", 
       ha='center', va='center', color='black', fontsize=10, 
       bbox=dict(facecolor='white', edgecolor='none', boxstyle='round,pad=0.1'))
+    if (angmin != 0) | (angmax !=0):
+      ax.gca().add_patch(patches.Wedge(pt, l, angmin-90, angmax-90, lw=0.5, facecolor=style_delta, alpha=0.2))
   return pts
 
 def find_line_start(points, angle, min_distance):

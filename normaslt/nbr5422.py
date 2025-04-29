@@ -38,11 +38,11 @@ def anguloBalancoAssincrono(v: float, beta: float) -> tuple[float, float]:
   
   Args:
   v -- vento de projeto em m/s
-  beta -- ângulo de balanço médio em rad
+  beta -- ângulo de balanço médio (rad)
 
   Returns:
-  bmin -- ângulo mínimo em rad
-  bmax -- ângulo máximo em rad
+  bmin -- ângulo mínimo (rad)
+  bmax -- ângulo máximo (rad)
   """
   sigma = 2.25 * (1 - exp(-v**2/230.))
   bmax = beta + 2 * radians(sigma)
@@ -68,16 +68,16 @@ def espacFFFrenteLenta(Us:float, Kcs:float, Fsfl:float, kg:float, kafl:float, zf
   Caso d > 10 m, um warning é lançado.
   
   Args:
-  Us -- Tensão entre fases eficaz da linha em kV
-  Kcs -- Fator de coordenação estatístico (Anexo C)
-  Fsfl -- Fator de sobretensão de frente lenta
-  kafl -- Fator de correção atmosférico
-  kg -- Fator de gap entre fases, Anexo C
-  zfl -- Variação de distribuição de probabilidade
-  alpha -- Relação entre sobretensões de polaridade positiva e negativa: alpha = un/ (up + un)
+  :param Us: Tensão entre fases eficaz da linha em kV
+  :param Kcs: Fator de coordenação estatístico (Anexo C)
+  :param Fsfl: Fator de sobretensão de frente lenta
+  :param kafl: Fator de correção atmosférico
+  :param kg: Fator de gap entre fases (Anexo C)
+  :param zfl: Variação de distribuição de probabilidade
+  :param alpha: Relação entre sobretensões de polaridade positiva e negativa: $\alpha = u_n/ (u_p + u_n)$
   """
   kzfl = 1 - 1.3*zfl
-  d = 2.17 * exp(Kcs * sqrt(2) * Us * Fsfl / (1080 * kafl * kzfl * kg* sqrt(3)) - 1)
+  d = 2.174 * exp(Kcs * sqrt(2) * Us * 1.4 * Fsfl / (1080 * kafl * kzfl * kg* sqrt(3)) - 1)
   if (d > 4):
     u50 = 1.4 * Kcs * sqrt(2) * Us * Fsfl / (kafl * kzfl * sqrt(3))
     r = 54.3115*alpha**2 + 212.6589*alpha - 0.1019*u50 + 286.0043
@@ -93,12 +93,11 @@ def espacFFFreqFund(Us:float, Ftmo:float, kaff:float, kgff=-1., zff=0.03, kg=-1.
   """Espacamento fase-fase em frequência fundamental
   Seção 9.3.2.1
 
-  Args:
-  Us -- Tensão entre fases norminal eficaz em kV
-  Ftmo -- Fator da tensão máxima de operação em pu
-  kaff -- 
-  kgff -- Fator de gap entre fases
-  zff -- (default 0.03)
+  :param Us: Tensão entre fases norminal eficaz em kV
+  :param Ftmo: Fator da tensão máxima de operação em pu
+  :param kaff: 
+  :param kgff: Fator de gap entre fases
+  :param zff: Coeficiente de variação da distribuição das probabilidades da suportabilidade do ar (default 0.03)
   """
   if kg != -1.:
     kgff = 1.35*kg -0.35*kg**2
@@ -112,6 +111,12 @@ def espacFFFreqFund(Us:float, Ftmo:float, kaff:float, kgff=-1., zff=0.03, kg=-1.
 def espacFFFrenteRapida(ufr:float, kafr:float, kg=-1., zfr=0.03, kgfr=-1.) -> float:
   """Espaçamento fase-fase para sobretensões de frente rápida
   Seção 9.5.2
+
+  :param ufr: Suportabilidade de polaridade positiva da cadeia (kV)
+  :param kafr: Fator de correção atmosférico para sobretensões de frente rápida
+  :param kg:
+  :param zfr:
+  :param kgfr:
   """
   if kg != -1.:
     kgfr = 0.74 + 0.26 * kg
@@ -125,6 +130,13 @@ def espacFFFrenteRapida(ufr:float, kafr:float, kg=-1., zfr=0.03, kgfr=-1.) -> fl
 def espacFTFrenteLenta(Us:float, Kcs:float, Fsfl:float, kafl:float, kg:float, zfl=0.06) -> float:
   """Espaçamento fase-terra para sobretensões de frente lenta
   Seção 9.4.1.1
+
+  :param Us: Tensão nominal da linha (kV)
+  :param Kcs: Fator de coordenação estatístico, suportabilidade 90% por sobretensão 2% ($U_90/V_2$)
+  :param Fsfl: Fator de sobretensão de frente lenta ref. a tensão de pico fase-terra, corr. a 2% de probabilidade de ser ultrapassado.
+  :param kafl:
+  :param kg:
+  :param zfl:
   """
   kzfl = 0.922 * (1-1.3 * zfl)
   return 2.17 * exp(Kcs*sqrt(2)*Us*Fsfl / (1080 * sqrt(3) * kafl * kzfl * kg) - 1)
@@ -335,12 +347,12 @@ def distSegurancaVert(obstaculo: types.obs, regime: types.amp, hobs: float, Us:f
   Tabela 5
 
   Args:
-  obstaculo -- Tipo de obstáculo
-  regime -- Regime e condição operativa, conforme Seção 5.4/ Tabela 4.
-  hobs -- Altura do obstáculo, dependendo do tipo, será assumido o valor mínimo por norma
-  Us -- Tensão nominal em kV
-  Fsfl --  
-  kafl --  
+  :param obstaculo: Tipo de obstáculo
+  :param regime: Regime e condição operativa, conforme Seção 5.4/ Tabela 4.
+  :param hobs: Altura do obstáculo, dependendo do tipo, será assumido o valor mínimo por norma
+  :param Us: Tensão nominal em kV
+  :param Fsfl: fator de sobretensão de frente lenta fase-terra referido ao valor de pico da tensão fase-terra US, correspondente a um valor de 2% de probabilidade de ser ultrapassado 
+  :param kafl: fator de correção das condições atmosféricas para sobretensão de frente lenta (Seção 4)
   """
   match obstaculo:
     case types.obs.PEDESTRE:
