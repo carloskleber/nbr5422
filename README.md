@@ -1,4 +1,4 @@
-# NBR 5422
+# NBR 5422 - modelos da norma ABNT NBR 5422 e comparação de metodologias de projetos de linhas de transmissão
 
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.15411524.svg)](https://doi.org/10.5281/zenodo.15411524)
 
