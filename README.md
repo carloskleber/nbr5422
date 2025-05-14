@@ -1,6 +1,6 @@
 # NBR 5422
 
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.10696412.svg)](https://doi.org/10.5281/zenodo.10696412)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.15411524.svg)](https://doi.org/10.5281/zenodo.15411524)
 
 Metodologia da norma ABNT NBR 5422:2024 "Projeto de linhas aéreas de energia elétrica - Critérios técnicos"
 
